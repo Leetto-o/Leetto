@@ -1,3 +1,8 @@
+---
+layout: post
+title: "KMP算法"
+data: 2025-03-23
+---
 # MKP算法
 
 ```

@@ -1,3 +1,8 @@
+---
+layout: post
+title: "Manacher算法"
+data: 2025-03-23
+---
 # Manacher算法
 ```
 class Solution {
