@@ -1,12 +1,21 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>我的笔记</title>
+    <title>My Notes</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/docsify/lib/themes/vue.css">
 </head>
 <body>
-    <h1>欢迎来到我的笔记主页</h1>
-    <p><a href="notes.md">查看我的笔记</a></p>
+    <div id="app"></div>
+    <script>
+        window.$docsify = {
+            name: 'My Notes',
+            repo: 'https://github.com/Leetto-o/leetto',
+            loadSidebar: true,
+            subMaxLevel: 2
+        }
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/docsify/lib/docsify.min.js"></script>
 </body>
 </html>
