@@ -12,9 +12,9 @@ description: |
   Welcome to LeeNote! 
   A hub for all things programming, algorithms, computer science, and math. Here, I document my learning journey, share insights, and break down complex concepts. Dive in, explore, and let’s geek out together!
 baseurl: "/" # the subpath of your site, e.g. /blog
-url: "http://Leetto-o.github.io/Leetto/" # the base hostname & protocol for your site
+url: "http://Leetto-o.github.io/Leetto" # the base hostname & protocol for your site
 github_username: Leetto-o
 
 # Build settings
 markdown: kramdown
-theme: Cayman
+theme: jekyll-theme-cayman
