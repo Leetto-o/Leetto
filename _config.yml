@@ -8,13 +8,11 @@
 # Site settings
 title: LeeNote
 email: leetto@qq.com
-description: > # this means to ignore newlines until "baseurl:"
-  Write an awesome description for your new site here. You can edit this
-  line in _config.yml. It will appear in your document head meta (for
-  Google search results) and in your feed.xml site description.
+description: |
+  Welcome to LeeNote! 
+  A hub for all things programming, algorithms, computer science, and math. Here, I document my learning journey, share insights, and break down complex concepts. Dive in, explore, and let’s geek out together!
 baseurl: "/" # the subpath of your site, e.g. /blog
-url: "http://yourdomain.com" # the base hostname & protocol for your site
-twitter_username: jekyllrb
+#url: "http://yourdomain.com" # the base hostname & protocol for your site
 github_username:  Leetto-o
 
 # Build settings

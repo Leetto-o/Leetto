@@ -1,0 +1,79 @@
+---
+layout: post
+title: "KMP算法"
+data: 2025-03-23 01:04:20 +0800
+categories: [Algorithm]
+---
+# MKP算法
+## 简介
+- KMP 是一个解决模式串在文本串是否出现过，如果出现过，最早出现的位置的经典算法。
+- Knuth-Morris-Pratt 字符串查找算法，简称为 “KMP 算法”，常用于在一个文本串 S 内查找一个模式串 P 的出现位置，这个算法由Donald Knuth、Vaughan Pratt、James H. Morris 三人于 1977 年联合发表，故取这 3 人的姓氏命名此算法。
+- KMP 方法算法就利用之前判断过的信息，通过一个 next 数组，保存模式串中前后最长公共子序列的长度，每次回溯时，通过 next 数组找到，前面匹配过的位置，省去了大量的计算时间。
+## 原理
+### next数组（以ABABA字符串为例）
+- next数据保存当前位置前后最长公共子序列的长度
+- 字符串的前缀是指不包含最后一个字符的所有以第一个字符（索引为0）开头的连续子串  
+ABABA的前缀有 A AB ABA ABAB
+- 字符串的后缀是指不包含第一个字符的所有以最后一个字符结尾的连续子串  
+ABABA的后缀有 A BA ABA BABA
+- 公共前后缀：一个字符串的**所有前缀连续子串**和**所有后缀连续子串**中相等的子串  
+ABABA的公共前后缀有 A ABA
+- 最长公共前后缀：所有公共前后缀的**长度最长**的子串  
+ABABA的最长公共前后缀是 **ABA**，长度为3，因此next[4] = 3;
+- 计算next数组的代码如下
+```c++
+vector<int> GenNext(string s1) {
+    int len = s1.size();
+    vector<int> next(len, 0);
+    int j = 0;
+    for(int i = 1; i < len; i++)
+    {
+        // 不相同就通过next数组找到相同或者j为0
+        while(j > 0 && s1[i] != s1[j])
+        {
+            j = next[j - 1];
+        }
+        // 相同往前走一个
+        if(s1[i] == s1[j])
+        {
+            j++;
+        }
+        next[i] = j;
+    }
+
+    return next;
+}
+```
+### 通过next数组进行匹配
+- 判断s2是否是s1的子串
+```c++
+bool Match(string s1, string s2)
+{
+    vector<int> next = GenNext(s2);
+    int len1 = s1.size();
+    int len2 = s2.size();
+    int j = 0;
+
+    // 过程与生成next数组过程很相似
+    for(int i = 0; i < len1>; i++)
+    {
+        while(j > 0 && s1[i] != s2[j])
+        {
+            j = next[j - 1];
+        }
+
+        if(s1[i] == s2[j])
+        {
+            j++;
+        }
+
+        // 说明匹配成功
+        if(j >= len2)
+        {
+            return true;
+        }
+    }
+    
+    return false;
+}
+```
