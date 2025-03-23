@@ -6,7 +6,7 @@ layout: default
 
   <h1 class="page-heading">Posts</h1>
 
-  <!-- {% for category in site.categories %}
+  {% for category in site.categories %}
   <h2>{{ category[0] }}</h2>
   <ul>
     {% for post in category[1] %}
@@ -15,9 +15,9 @@ layout: default
       </li>
     {% endfor %}
   </ul>
-  {% endfor %} -->
+  {% endfor %}
 
-  <ul class="post-list">
+  <!-- <ul class="post-list">
     {% for post in site.posts %}
       <li>
         <span class="post-meta">{{ post.date | date: "%b %-d, %Y" }}</span>
@@ -27,7 +27,7 @@ layout: default
         </h2>
       </li>
     {% endfor %}
-  </ul>
+  </ul> -->
 
   <p class="rss-subscribe">subscribe <a href="{{ "/feed.xml" | prepend: site.baseurl }}">via RSS</a></p>
 

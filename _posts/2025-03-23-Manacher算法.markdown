@@ -13,6 +13,7 @@ categories: [Algorithm]
     - 如果两边的字母相同，我们就可以继续扩展，例如从 P(i+1,j−1) 扩展到 P(i,j)；
     - 如果两边的字母不同或者到了边界，就停止扩展，因为在这之后的子串都不能是回文串了
 - 代码实现比较简单
+
 ```c++
 pair<int, int> expandAroundCenter(const string& s, int left, int right) {
     while (left >= 0 && right < s.size() && s[left] == s[right]) {
@@ -21,7 +22,6 @@ pair<int, int> expandAroundCenter(const string& s, int left, int right) {
     }
     return {left + 1, right - 1};
 }
-
 string longestPalindrome(string s) {
     int start = 0, end = 0;
     for (int i = 0; i < s.size(); ++i) {
@@ -58,7 +58,6 @@ int expandAroundCenter(const string& s, int left, int right)
     }
     return (right - left - 2) / 2;
 }
-
 vector<int> longestPalindrome(string s)
 {
     vector<int> arm_len;
@@ -93,7 +92,9 @@ vector<int> longestPalindrome(string s)
 }
 
 ```
+
 - 偶数情况可以通过一个特别的操作将奇偶数的情况统一起来：向字符串的头尾以及每两个字符中间添加一个特殊字符 #，比如字符串 aaba 处理后会变成 #a#a#b#a#。那么原先长度为偶数的回文字符串 aa 会变成长度为奇数的回文字符串 #a#a#，而长度为奇数的回文字符串 aba 会变成长度仍然为奇数的回文字符串 #a#b#a#，就不需要再考虑长度为偶数的回文字符串了。
+
 
 ```c++
 int expand(const string& s, int left, int right)
