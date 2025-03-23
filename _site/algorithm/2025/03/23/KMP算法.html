@@ -7,11 +7,11 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   <title>KMP算法</title>
-  <meta name="description" content="MKP算法简介  KMP 是一个解决模式串在文本串是否出现过，如果出现过，最早出现的位置的经典算法。  Knuth-Morris-Pratt 字符串查找算法，简称为 “KMP 算法”，常用于在一个文本串 S 内查找一个模式串 P 的出现位置，这个算法由Donald Knuth、Vaughan Pratt、Jame...">
+  <meta name="description" content="MKP算法简介  KMP是解决一个给定模式串S1是否为s2字串的问题的算法。  Knuth-Morris-Pratt 字符串查找算法，简称为 “KMP 算法”，常用于在一个文本串 S 内查找一个模式串 P 的出现位置，这个算法由Donald Knuth、Vaughan Pratt、James H. Morris ...">
 
-  <link rel="stylesheet" href="//css/main.css">
-  <link rel="canonical" href="http://yourdomain.com//algorithm/2025/03/23/KMP%E7%AE%97%E6%B3%95.html">
-  <link rel="alternate" type="application/rss+xml" title="LeeNote" href="http://yourdomain.com//feed.xml">
+  <link rel="stylesheet" href="/Leetto/css/main.css">
+  <link rel="canonical" href="http://Leetto-o.github.io/Leetto/algorithm/2025/03/23/KMP%E7%AE%97%E6%B3%95.html">
+  <link rel="alternate" type="application/rss+xml" title="LeeNote" href="http://Leetto-o.github.io/Leetto/feed.xml">
 </head>
 
 
@@ -21,7 +21,7 @@
 
   <div class="wrapper">
 
-    <a class="site-title" href="//">LeeNote</a>
+    <a class="site-title" href="/Leetto/">LeeNote</a>
 
     <nav class="site-nav">
       <a href="#" class="menu-icon">
@@ -35,7 +35,7 @@
       <div class="trigger">
         
           
-          <a class="page-link" href="//about/">About</a>
+          <a class="page-link" href="/Leetto/about/">About</a>
           
         
           
@@ -65,7 +65,7 @@
     <h1 id="mkp算法">MKP算法</h1>
 <h2 id="简介">简介</h2>
 <ul>
-  <li>KMP 是一个解决模式串在文本串是否出现过，如果出现过，最早出现的位置的经典算法。</li>
+  <li>KMP是解决一个给定模式串S1是否为s2字串的问题的算法。</li>
   <li>Knuth-Morris-Pratt 字符串查找算法，简称为 “KMP 算法”，常用于在一个文本串 S 内查找一个模式串 P 的出现位置，这个算法由Donald Knuth、Vaughan Pratt、James H. Morris 三人于 1977 年联合发表，故取这 3 人的姓氏命名此算法。</li>
   <li>KMP 方法算法就利用之前判断过的信息，通过一个 next 数组，保存模式串中前后最长公共子序列的长度，每次回溯时，通过 next 数组找到，前面匹配过的位置，省去了大量的计算时间。
     <h2 id="原理">原理</h2>
