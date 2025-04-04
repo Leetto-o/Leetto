@@ -47,6 +47,7 @@ string longestPalindrome(string s) {
 ![Manacher]({{ site.baseurl }}/assets/images/Manacher.png)  
 - 如果对称点的臂长等于n，则点i的臂长至少为min(j + length - i, n)，因为j和**对称点**的都是之前计算过的。那么就可以直接跳过i到i + min(j + length - i, n)这部分，从i + min(j + length - i, n) + 1开始拓展。  
 - 奇数情况的代码如下
+
 ```c++
 int expandAroundCenter(const string& s, int left, int right)
 {
@@ -57,7 +58,6 @@ int expandAroundCenter(const string& s, int left, int right)
     }
     return (right - left - 2) / 2;
 }
-```
 
 vector<int> longestPalindrome(string s)
 {

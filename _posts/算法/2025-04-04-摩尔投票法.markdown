@@ -1,0 +1,51 @@
+---
+layout: post
+title: "摩尔投票法"
+data: 2025-04-04 00:00:00 +0800
+categories: [Algorithm]
+---
+# 摩尔投票法
+- 摩尔投票法解决的问题是找出一组数字序列中出现次数大于总数
+1/2的数字，其核心思想为对拼消耗，可以直接利用反证法证明这样的数字只可能有一个。摩尔投票算法的核心思想是基于这个事实：  
+- 每次从序列里选择两个不相同的数字删除掉（或称为「抵消」），最后剩下一个数字或几个相同的数字，就是出现次数大于总数一半的那个元素。假设我们当前数组中存在次数大于总数一半的元素为 x，数组的总长度为 n，则我们可以把数组分为两部分，一部分为相同的 k 个元素 x，另一部分为(n−k)/2对个不同的元素配对，此时我们假设还存在另外一个次数大于总数一半的元素y，则此时y因该满足y>n/2​，但是按照我们之前的推理 y 应当满足 y≤(n−k)/2，二者自相矛盾。
+
+```c++
+int Vote(vector<int> nums)
+{
+    int votes = 0;
+    int candidates = 0;
+    for(int n : nums)
+    {
+        if(votes == 0)
+        {
+            candidates = n;
+            votes++;
+        }
+        else if(n == candidates)
+        {
+            votes++;
+        }
+        else
+        {
+            votes--;
+        }
+    }
+
+    votes = 0;
+
+    for(int n : nums)
+    {
+        if(n == candidates)
+        {
+            votes++;
+        }
+    }
+
+    if(votes > nums.size() / 2)
+    {
+        return candidates;
+    }
+
+    return -1;
+}
+```

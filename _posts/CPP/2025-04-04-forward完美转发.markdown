@@ -1,0 +1,99 @@
+---
+layout: post
+title: "forward完美转发"
+data: 2025-04-04 00:00:00 +0800
+categories: [CPP]
+---
+# forward完美转发
+- **完美转发**是为了解决传递参数时的临时对象（右值）被强制转换为左值的问题
+- forward源码如下
+
+```c++
+template<class T>
+T&& forward(typename std::remove_reference<T>::type& t) noexcept {
+  return static_cast<T&&>(t);
+}
+
+template <class T>
+T&& forward(typename std::remove_reference<T>::type&& t) noexcept {
+  return static_cast<T&&>(t);
+}
+```
+
+- 其内部实现只有一行代码，即static_cast<T&&>(t)使用static_cast<>进行类型转换，与std::move()实现方式类似。当接收一个左值作为参数时，std::forward<>()返回左值引用，相应的，当接收一个右值作为参数时，std::forward<>()返回右值引用。
+- **引用折叠**是一种特性，允许在模板元编程中使用引用类型的参数来创建新的引用类型。由于存在T&&这种万能引用类型，当它作为参数时，有可能被一个左值/左值引用或右值/右值引用的参数初始化，这需要通过类型推导，推导后得到的参数类型会发生类型变化，这种变化就称为引用折叠。
+- 根本原因是因为C++中禁止reference to reference，所以编译器需要对四种情况（& &、& &&，&& &,&& &&）进行处理，将他们折叠成一种单一的reference。引用折叠的规则如下：如果两个引用中至少其中一个引用是左值引用，那么折叠结果就是左值引用；否则折叠结果就是右值引用。
+- 下面给出一个案例没有实现完美转发，如下：  
+
+```c++
+template <typename T>
+void wrapper(T u)
+{
+    fun(u);
+}
+
+class MyClass {};
+
+void fun(MyClass& a) { std::cout << "in fun(MyClass&)\n"; }
+void fun(const MyClass& a) { std::cout << "in fun(const MyClass&)\n"; }
+void fun(MyClass&& a) { std::cout << "in fun(MyClass &&)\n"; }
+
+int main(void)
+{
+    MyClass a;
+    const MyClass b;
+
+    fun(a);
+    fun(b);
+    fun(MyClass());
+
+    std::cout << "----- Wrapper ------\n";
+    wrapper(a);
+    wrapper(b);
+    wrapper(MyClass());
+
+    return 0;
+}
+
+// 输出结果为
+// in func(MyClass&)
+// in func(const MyClass&)
+// in func(MyClass &&)
+//----- Wrapper ------
+// in func(MyClass&)
+// in func(const MyClass&)
+// in func(const MyClass&)
+```
+
+- 使用万能引用和完美转发来修改前面的例子，如下：
+
+```c++
+template <typename T>
+void wrapper(T &&u)
+{ // 万能引用
+    func(std::forward<T>(u)); // 完美转发
+}
+
+class MyClass {};
+
+void func(MyClass& a) { std::cout << "in func(MyClass&)\n"; }
+void func(const MyClass& a) { std::cout << "in func(const MyClass&)\n"; }
+void func(MyClass&& a) { std::cout << "in func(MyClass &&)\n"; }
+
+int main(void)
+{
+    MyClass a;
+    const MyClass b;
+
+    func(a);
+    func(b);
+    func(MyClass());
+
+    std::cout << "----- Wrapper ------\n";
+    wrapper(a);
+    wrapper(b);
+    wrapper(MyClass());
+
+    return 0;
+}
+```

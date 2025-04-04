@@ -110,123 +110,123 @@
   <li>如图所示，如果位置<strong>j</strong>的臂长为length，并且有<strong>j + length &gt; i</strong>当在位置i开始进行中心拓展时，我们可以先找到i关于j的<strong>对称点</strong> 2 * j - i。<br />
 <img src="/Leetto/assets/images/Manacher.png" alt="Manacher" /></li>
   <li>如果对称点的臂长等于n，则点i的臂长至少为min(j + length - i, n)，因为j和<strong>对称点</strong>的都是之前计算过的。那么就可以直接跳过i到i + min(j + length - i, n)这部分，从i + min(j + length - i, n) + 1开始拓展。</li>
-  <li>奇数情况的代码如下
-    <div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kt">int</span> <span class="nf">expandAroundCenter</span><span class="p">(</span><span class="k">const</span> <span class="n">string</span><span class="o">&amp;</span> <span class="n">s</span><span class="p">,</span> <span class="kt">int</span> <span class="n">left</span><span class="p">,</span> <span class="kt">int</span> <span class="n">right</span><span class="p">)</span>
-<span class="p">{</span>
-  <span class="k">while</span> <span class="p">(</span><span class="n">left</span> <span class="o">&gt;=</span> <span class="mi">0</span> <span class="o">&amp;&amp;</span> <span class="n">right</span> <span class="o">&lt;</span> <span class="n">s</span><span class="p">.</span><span class="n">size</span><span class="p">()</span> <span class="o">&amp;&amp;</span> <span class="n">s</span><span class="p">[</span><span class="n">left</span><span class="p">]</span> <span class="o">==</span> <span class="n">s</span><span class="p">[</span><span class="n">right</span><span class="p">])</span>
-  <span class="p">{</span>
-      <span class="o">--</span><span class="n">left</span><span class="p">;</span>
-      <span class="o">++</span><span class="n">right</span><span class="p">;</span>
-  <span class="p">}</span>
-  <span class="k">return</span> <span class="p">(</span><span class="n">right</span> <span class="o">-</span> <span class="n">left</span> <span class="o">-</span> <span class="mi">2</span><span class="p">)</span> <span class="o">/</span> <span class="mi">2</span><span class="p">;</span>
-<span class="p">}</span>
-</code></pre></div>    </div>
-  </li>
+  <li>奇数情况的代码如下</li>
 </ul>
 
-<p>vector<int> longestPalindrome(string s)
-{
-    vector<int> arm_len;
-    int right = -1, j = -1;</int></int></p>
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kt">int</span> <span class="nf">expandAroundCenter</span><span class="p">(</span><span class="k">const</span> <span class="n">string</span><span class="o">&amp;</span> <span class="n">s</span><span class="p">,</span> <span class="kt">int</span> <span class="n">left</span><span class="p">,</span> <span class="kt">int</span> <span class="n">right</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="k">while</span> <span class="p">(</span><span class="n">left</span> <span class="o">&gt;=</span> <span class="mi">0</span> <span class="o">&amp;&amp;</span> <span class="n">right</span> <span class="o">&lt;</span> <span class="n">s</span><span class="p">.</span><span class="n">size</span><span class="p">()</span> <span class="o">&amp;&amp;</span> <span class="n">s</span><span class="p">[</span><span class="n">left</span><span class="p">]</span> <span class="o">==</span> <span class="n">s</span><span class="p">[</span><span class="n">right</span><span class="p">])</span>
+    <span class="p">{</span>
+        <span class="o">--</span><span class="n">left</span><span class="p">;</span>
+        <span class="o">++</span><span class="n">right</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="p">(</span><span class="n">right</span> <span class="o">-</span> <span class="n">left</span> <span class="o">-</span> <span class="mi">2</span><span class="p">)</span> <span class="o">/</span> <span class="mi">2</span><span class="p">;</span>
+<span class="p">}</span>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>for (int i = 0; i &lt; s.size(); ++i)
-{
-    int cur_arm_len;
-    // 之前中心的臂长是否能覆盖当前
-    if (right &gt;= i)
-    {
-        // 对称点
-        int i_sym = j * 2 - i;
-        int min_arm_len = min(arm_len[i_sym], right - i);
-        cur_arm_len = expandAroundCenter(s, i - min_arm_len, i + min_arm_len);
-    }
-    else
-    {
-        cur_arm_len = expandAroundCenter(s, i, i);
-    }
+<span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">longestPalindrome</span><span class="p">(</span><span class="n">string</span> <span class="n">s</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">arm_len</span><span class="p">;</span>
+    <span class="kt">int</span> <span class="n">right</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">j</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span>
 
-    arm_len.push_back(cur_arm_len);
-    // 更新j和right
-    if (i + cur_arm_len &gt; right)
-    {
-        j = i;
-        right = i + cur_arm_len;
-    }
-}
+    <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">s</span><span class="p">.</span><span class="n">size</span><span class="p">();</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="kt">int</span> <span class="n">cur_arm_len</span><span class="p">;</span>
+        <span class="c1">// 之前中心的臂长是否能覆盖当前
+</span>        <span class="k">if</span> <span class="p">(</span><span class="n">right</span> <span class="o">&gt;=</span> <span class="n">i</span><span class="p">)</span>
+        <span class="p">{</span>
+            <span class="c1">// 对称点
+</span>            <span class="kt">int</span> <span class="n">i_sym</span> <span class="o">=</span> <span class="n">j</span> <span class="o">*</span> <span class="mi">2</span> <span class="o">-</span> <span class="n">i</span><span class="p">;</span>
+            <span class="kt">int</span> <span class="n">min_arm_len</span> <span class="o">=</span> <span class="n">min</span><span class="p">(</span><span class="n">arm_len</span><span class="p">[</span><span class="n">i_sym</span><span class="p">],</span> <span class="n">right</span> <span class="o">-</span> <span class="n">i</span><span class="p">);</span>
+            <span class="n">cur_arm_len</span> <span class="o">=</span> <span class="n">expandAroundCenter</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">i</span> <span class="o">-</span> <span class="n">min_arm_len</span><span class="p">,</span> <span class="n">i</span> <span class="o">+</span> <span class="n">min_arm_len</span><span class="p">);</span>
+        <span class="p">}</span>
+        <span class="k">else</span>
+        <span class="p">{</span>
+            <span class="n">cur_arm_len</span> <span class="o">=</span> <span class="n">expandAroundCenter</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">i</span><span class="p">,</span> <span class="n">i</span><span class="p">);</span>
+        <span class="p">}</span>
 
-return arm_len; }
+        <span class="n">arm_len</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="n">cur_arm_len</span><span class="p">);</span>
+        <span class="c1">// 更新j和right
+</span>        <span class="k">if</span> <span class="p">(</span><span class="n">i</span> <span class="o">+</span> <span class="n">cur_arm_len</span> <span class="o">&gt;</span> <span class="n">right</span><span class="p">)</span>
+        <span class="p">{</span>
+            <span class="n">j</span> <span class="o">=</span> <span class="n">i</span><span class="p">;</span>
+            <span class="n">right</span> <span class="o">=</span> <span class="n">i</span> <span class="o">+</span> <span class="n">cur_arm_len</span><span class="p">;</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+
+    <span class="k">return</span> <span class="n">arm_len</span><span class="p">;</span>
+<span class="p">}</span>
+
 </code></pre></div></div>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
-- 偶数情况可以通过一个特别的操作将奇偶数的情况统一起来：向字符串的头尾以及每两个字符中间添加一个特殊字符 #，比如字符串 aaba 处理后会变成 #a#a#b#a#。那么原先长度为偶数的回文字符串 aa 会变成长度为奇数的回文字符串 #a#a#，而长度为奇数的回文字符串 aba 会变成长度仍然为奇数的回文字符串 #a#b#a#，就不需要再考虑长度为偶数的回文字符串了。
+<ul>
+  <li>偶数情况可以通过一个特别的操作将奇偶数的情况统一起来：向字符串的头尾以及每两个字符中间添加一个特殊字符 #，比如字符串 aaba 处理后会变成 #a#a#b#a#。那么原先长度为偶数的回文字符串 aa 会变成长度为奇数的回文字符串 #a#a#，而长度为奇数的回文字符串 aba 会变成长度仍然为奇数的回文字符串 #a#b#a#，就不需要再考虑长度为偶数的回文字符串了。</li>
+</ul>
 
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kt">int</span> <span class="nf">expand</span><span class="p">(</span><span class="k">const</span> <span class="n">string</span><span class="o">&amp;</span> <span class="n">s</span><span class="p">,</span> <span class="kt">int</span> <span class="n">left</span><span class="p">,</span> <span class="kt">int</span> <span class="n">right</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="k">while</span> <span class="p">(</span><span class="n">left</span> <span class="o">&gt;=</span> <span class="mi">0</span> <span class="o">&amp;&amp;</span> <span class="n">right</span> <span class="o">&lt;</span> <span class="n">s</span><span class="p">.</span><span class="n">size</span><span class="p">()</span> <span class="o">&amp;&amp;</span> <span class="n">s</span><span class="p">[</span><span class="n">left</span><span class="p">]</span> <span class="o">==</span> <span class="n">s</span><span class="p">[</span><span class="n">right</span><span class="p">])</span>
+    <span class="p">{</span>
+        <span class="o">--</span><span class="n">left</span><span class="p">;</span>
+        <span class="o">++</span><span class="n">right</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="p">(</span><span class="n">right</span> <span class="o">-</span> <span class="n">left</span> <span class="o">-</span> <span class="mi">2</span><span class="p">)</span> <span class="o">/</span> <span class="mi">2</span><span class="p">;</span>
+<span class="p">}</span>
 
-```c++
-int expand(const string&amp; s, int left, int right)
-{
-    while (left &gt;= 0 &amp;&amp; right &lt; s.size() &amp;&amp; s[left] == s[right])
-    {
-        --left;
-        ++right;
-    }
-    return (right - left - 2) / 2;
-}
+<span class="n">string</span> <span class="nf">longestPalindrome</span><span class="p">(</span><span class="n">string</span> <span class="n">s</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="kt">int</span> <span class="n">start</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">end</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span>
+    <span class="n">string</span> <span class="n">t</span> <span class="o">=</span> <span class="s">"#"</span><span class="p">;</span>
 
-string longestPalindrome(string s)
-{
-    int start = 0, end = -1;
-    string t = "#";
+    <span class="k">for</span> <span class="p">(</span><span class="kt">char</span> <span class="n">c</span><span class="o">:</span> <span class="n">s</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="n">t</span> <span class="o">+=</span> <span class="n">c</span><span class="p">;</span>
+        <span class="n">t</span> <span class="o">+=</span> <span class="sc">'#'</span><span class="p">;</span>
+    <span class="p">}</span>
 
-    for (char c: s)
-    {
-        t += c;
-        t += '#';
-    }
+    <span class="n">t</span> <span class="o">+=</span> <span class="sc">'#'</span><span class="p">;</span>
+    <span class="n">s</span> <span class="o">=</span> <span class="n">t</span><span class="p">;</span>
 
-    t += '#';
-    s = t;
+    <span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">arm_len</span><span class="p">;</span>
+    <span class="kt">int</span> <span class="n">right</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">j</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span>
 
-    vector&lt;int&gt; arm_len;
-    int right = -1, j = -1;
+    <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">s</span><span class="p">.</span><span class="n">size</span><span class="p">();</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="kt">int</span> <span class="n">cur_arm_len</span><span class="p">;</span>
+        <span class="c1">// 之前中心的臂长是否能覆盖当前
+</span>        <span class="k">if</span> <span class="p">(</span><span class="n">right</span> <span class="o">&gt;=</span> <span class="n">i</span><span class="p">)</span>
+        <span class="p">{</span>
+            <span class="c1">// 对称点
+</span>            <span class="kt">int</span> <span class="n">i_sym</span> <span class="o">=</span> <span class="n">j</span> <span class="o">*</span> <span class="mi">2</span> <span class="o">-</span> <span class="n">i</span><span class="p">;</span>
+            <span class="kt">int</span> <span class="n">min_arm_len</span> <span class="o">=</span> <span class="n">min</span><span class="p">(</span><span class="n">arm_len</span><span class="p">[</span><span class="n">i_sym</span><span class="p">],</span> <span class="n">right</span> <span class="o">-</span> <span class="n">i</span><span class="p">);</span>
+            <span class="n">cur_arm_len</span> <span class="o">=</span> <span class="n">expand</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">i</span> <span class="o">-</span> <span class="n">min_arm_len</span><span class="p">,</span> <span class="n">i</span> <span class="o">+</span> <span class="n">min_arm_len</span><span class="p">);</span>
+        <span class="p">}</span>
+        <span class="k">else</span>
+        <span class="p">{</span>
+            <span class="n">cur_arm_len</span> <span class="o">=</span> <span class="n">expand</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">i</span><span class="p">,</span> <span class="n">i</span><span class="p">);</span>
+        <span class="p">}</span>
 
-    for (int i = 0; i &lt; s.size(); ++i)
-    {
-        int cur_arm_len;
-        // 之前中心的臂长是否能覆盖当前
-        if (right &gt;= i)
-        {
-            // 对称点
-            int i_sym = j * 2 - i;
-            int min_arm_len = min(arm_len[i_sym], right - i);
-            cur_arm_len = expand(s, i - min_arm_len, i + min_arm_len);
-        }
-        else
-        {
-            cur_arm_len = expand(s, i, i);
-        }
-
-        arm_len.push_back(cur_arm_len);
+        <span class="n">arm_len</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="n">cur_arm_len</span><span class="p">);</span>
         
-        if (i + cur_arm_len &gt; right)
-        {
-            j = i;
-            right = i + cur_arm_len;
-        }
-        if (cur_arm_len * 2 + 1 &gt; end - start) {
-            start = i - cur_arm_len;
-            end = i + cur_arm_len;
-        }
-    }
+        <span class="k">if</span> <span class="p">(</span><span class="n">i</span> <span class="o">+</span> <span class="n">cur_arm_len</span> <span class="o">&gt;</span> <span class="n">right</span><span class="p">)</span>
+        <span class="p">{</span>
+            <span class="n">j</span> <span class="o">=</span> <span class="n">i</span><span class="p">;</span>
+            <span class="n">right</span> <span class="o">=</span> <span class="n">i</span> <span class="o">+</span> <span class="n">cur_arm_len</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">cur_arm_len</span> <span class="o">*</span> <span class="mi">2</span> <span class="o">+</span> <span class="mi">1</span> <span class="o">&gt;</span> <span class="n">end</span> <span class="o">-</span> <span class="n">start</span><span class="p">)</span> <span class="p">{</span>
+            <span class="n">start</span> <span class="o">=</span> <span class="n">i</span> <span class="o">-</span> <span class="n">cur_arm_len</span><span class="p">;</span>
+            <span class="n">end</span> <span class="o">=</span> <span class="n">i</span> <span class="o">+</span> <span class="n">cur_arm_len</span><span class="p">;</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
 
-    string ans;
-    for (int i = start; i &lt;= end; ++i) {
-        if (s[i] != '#') {
-            ans += s[i];
-        }
-    }
+    <span class="n">string</span> <span class="n">ans</span><span class="p">;</span>
+    <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="n">start</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;=</span> <span class="n">end</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">s</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">!=</span> <span class="sc">'#'</span><span class="p">)</span> <span class="p">{</span>
+            <span class="n">ans</span> <span class="o">+=</span> <span class="n">s</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
     
-    return ans;
-}
+    <span class="k">return</span> <span class="n">ans</span><span class="p">;</span>
+<span class="p">}</span>
 </code></pre></div></div>
 
   </div>

@@ -1,0 +1,110 @@
+---
+layout: post
+title: "CPP未来体"
+data: 2025-04-04 00:00:00 +0800
+categories: [CPP]
+---
+# CPP未来体
+- 总体来说，std::async 接口最简单，做的事情最多，抽象程度最高；std::packaged_task，抽象程度次之，需要额外的操作但却比较灵活；std::promise 功能最为单一，是三者中抽象程度最低的。
+## async函数
+- 使用 std::async 启动一个异步任务，std::async 返回一个 std::future 对象，std::future 对象中存放着最终计算的结果。
+- 当需要最终结果时，调用 std::future::get() 方法即可，该方法会阻塞线程直到期望值状态就绪为止
+- async例子
+
+```c++
+int find_the_answer();
+void do_other_stuff();
+int main()
+{
+    // std::async 并不总会开启新的线程来执行任务
+    // 可以指定 std::launch::async 来强制开启新线程
+    std::future<int> the_answer = std::async(std::launch::async, find_the_answer);
+    do_other_stuff();
+    std::cout << "The answer is " << the_answer.get() << std::endl;
+}
+```
+## packaged_task函数
+- std::packaged_task 本身和线程没啥关系，它只是一个关联了 std::future 的仿函数
+
+```c++
+auto task = [](int i)
+{ 
+    std::this_thread::sleep_for(std::chrono::seconds(5));
+    return i+100; 
+};
+
+std::packaged_task< int(int) > package{ task };
+std::future<int> f = package.get_future();
+std::thread t { std::move(package), 5 };
+
+std::cout << f.get() << std::endl; // 阻塞，直到线程 t 结束
+
+t.join();
+```
+## promise函数
+- 类模板 std::promise 提供一种设施用以存储一个值或一个异常，之后通过 std::promise 对象所创建的 std::future 对象异步获得。注意 std::promise 只应当使用一次。
+
+```c++
+auto task = [](std::future<int> i)
+{
+     // 阻塞，直到 p.set_value() 被调用
+    std::cout << i.get() << std::flush;
+};
+
+std::promise<int> p;
+std::thread t{ task, p.get_future() };
+
+std::this_thread::sleep_for(std::chrono::seconds(5));
+p.set_value(5);
+
+t.join();
+```
+
+## async、packaged_task、promise三者比较
+- 可以用packaged_task实现async
+
+```c++
+std::future<int> my_async(function<int(int i)> task, int i)
+{
+    std::packaged_task<int(int)> package{task};
+    std::future<int> f = package.get_future();
+
+    std::thread t(std::move(package), i);
+    t.detach();
+    return f;
+}
+
+int main()
+{
+    auto task = [](int i) { std::this_thread::sleep_for(std::chrono::seconds(5)); return i+100; };
+
+    std::future<int> f = my_async(task, 5);
+    std::cout << f.get() << std::endl;
+    return 0;
+}
+```
+
+- 可以用promise实现packaged_task
+```c++
+template <typename> class my_task;
+
+template <typename R, typename ...Args>
+class my_task<R(Args...)>
+{
+    std::function<R(Args...)> fn;
+    // the promise of the result
+    std::promise<R> pr;
+public:
+    template <typename ...Ts>
+    explicit my_task(Ts &&... ts) : fn(std::forward<Ts>(ts)...) { }
+
+    template <typename ...Ts>
+    void operator()(Ts &&... ts)
+    {
+        pr.set_value(fn(std::forward<Ts>(ts)...));  // fulfill the promise
+    }
+
+    std::future<R> get_future() { return pr.get_future(); }
+};
+
+```
