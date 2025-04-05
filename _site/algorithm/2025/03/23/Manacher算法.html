@@ -108,7 +108,7 @@
   <li>Manacher算法的思想就是在中心扩展算法的基础上，运用之前的结果来减少扩展过程</li>
   <li>为了表述方便，先思考奇数情况，首先定义一个新概念<strong>臂长</strong>，表示中心扩展算法向外扩展的长度。如果一个位置的最大回文字符串长度为 2 * length + 1 ，其臂长为 length。</li>
   <li>如图所示，如果位置<strong>j</strong>的臂长为length，并且有<strong>j + length &gt; i</strong>当在位置i开始进行中心拓展时，我们可以先找到i关于j的<strong>对称点</strong> 2 * j - i。<br />
-<img src="/Leetto/assets/images/Manacher.png" alt="Manacher" /></li>
+<img src="/Leetto/assets/images/Manacher算法/Manacher.png" alt="Manacher" /></li>
   <li>如果对称点的臂长等于n，则点i的臂长至少为min(j + length - i, n)，因为j和<strong>对称点</strong>的都是之前计算过的。那么就可以直接跳过i到i + min(j + length - i, n)这部分，从i + min(j + length - i, n) + 1开始拓展。</li>
   <li>奇数情况的代码如下</li>
 </ul>

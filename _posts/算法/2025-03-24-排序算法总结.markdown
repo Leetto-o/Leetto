@@ -5,11 +5,203 @@ data: 2025-03-24 00:00:00 +0800
 categories: [Algorithm]
 ---
 # 排序算法总结
-## 冒泡排序
-## 比较排序
-## 插入排序
-## 奇偶排序
-## 归并排序
-## 快速排序
-## 堆排序
-## 基数排序
+排序算法复杂度分析
+![排序算法]({{ site.baseurl }}/assets/images/排序算法/Sorting.png)
+## 选择排序-直接选择排序(Selection Sort)
+- 每一次从待排序的数据元素中选出最小（或最大）的一个元素，存放在序列的起始位置，直到全部待排序的 数据元素排完 。
+- 找出序列中的最小关键字，然后将这个元素与序列首端元素交换位置。例如，序列前i个元素已经有序，从第i+1到第n个元素中选择关键字最小的元素，假设第j个元素为最小元素，则交换第j个元素与第i+1个元素的位置。依次执行此操作，直到第n-1个元素也被确定。
+
+```c++
+void SelectionSort(vector<int>& nums)
+{
+    for (int i = 0; i < nums.size(); i++)
+    {
+        int minPos = i;
+        for (int j = i + 1; j < nums.size(); j++)
+        {
+            if (nums[j] < nums[minPos])
+            {
+                minPos = j;
+            }
+        }
+
+        swap(nums[i], nums[minPos]);
+    }
+}
+```
+## 选择排序-堆排序(Heap Sort)
+- **堆排序**是利用堆的一种排序算法，它是选择排序的一种。
+- 通过堆来进行选择数据。需要注意的是排升序要建大堆，排降序建小堆。
+
+```c++
+void HeapSort(vector<int>& nums)
+{
+    // 更新堆
+    auto HeapAdjust = [&](int start, int end)
+    { 
+        int fatherNode = start;
+        int sonNode = 0;
+
+        for (sonNode = start * 2 + 1; sonNode <= end; sonNode = sonNode * 2 + 1)
+        {
+            if (sonNode + 1 < end && nums[sonNode] < nums[sonNode + 1])
+            {
+                sonNode++;
+            }
+
+            if (nums[sonNode] < nums[fatherNode])
+            {
+                return;
+            }
+            else
+            {
+                swap(nums[fatherNode], nums[sonNode]);
+                fatherNode = sonNode;
+            }
+        }
+    };
+    // 初始化大端堆
+    for (int sonNode = nums.size() / 2 - 1; sonNode >= 0 ; sonNode--)
+    {
+        HeapAdjust(sonNode, nums.size() - 1);
+    }
+
+    // 将最大元素放到最后
+    for (int i = nums.size() - 1; i >= 0; i--)
+    {
+        swap(nums[0], nums[i]);
+        HeapAdjust(0, i - 1);
+    }
+}
+```
+## 插入排序-直接插入排序(Insertion Sort)
+- 插入第i(i>=1)个元素时，前面的array[0],array[1],…,array[i-1]已经排好序，此时用array[i]的排序码与 array[i-1],array[i-2],…的排序码顺序进行比较，找到插入位置即将array[i]插入，原来位置上的元素顺序后移
+- 元素集合越接近有序，直接插入排序算法的时间效率越高
+
+```c++
+void InsertionSort(vector<int>& nums)
+{
+    for (int i = 0; i < nums.size(); i++)
+    {
+        int tmp = i;
+
+        for (int j = i - 1; j >= 0; j--)
+        {
+            if (nums[j] > nums[tmp])
+            {
+                swap(nums[j], nums[tmp]);
+                tmp = j;
+            }
+        }
+    }
+}
+```
+
+## 插入排序-希尔排序(Shell Sort)
+- 希尔排序法又称缩小增量法，是对直接插入排序的优化
+- 希尔排序法的基本思想是：先选定一个整数r（可以取n/2），把待排序文件中所有记录分成(n-r+1)个组，所有距离为r的记录分在同一组内，并对每一组内的记录进行排序,然后另r=r/2，重复上述分组和排序的工 作。当到达r=1时，所有记录在统一组内排好序。
+- 比较在希尔排序中是最主要的操作，而不是交换。用已知最好的步长序列的希尔排序比直接插入排序要快，甚至在小数组中比快速排序和堆排序还快，但在涉及大量数据时希尔排序还是不如快排
+- **希尔增量**：n/2, n/4, ... , 1，时间复杂度为 O(n²)
+- **Hibbard增量**：1, 3, 7, 15, ... , 2^k - 1，时间复杂度为 O(n^(3/2))
+- **Sedgewick增量**：1, 5, 19, 41, 109, ... ，时间复杂度为 O(n^(4/3))
+
+```c++
+void ShellSort(vector<int>& nums)
+{
+    // Sedgewick增量.
+    auto GetGaps = [&](int n) 
+    {
+        vector<int> ret;
+        int idx = 0;
+        while (true)
+        {
+            // 9*4^i-9*2^i+1
+            int tmp = 9 * ((1 << (2 * idx)) - (1 << idx)) + 1;
+            if (tmp <= n)
+            {
+                ret.push_back(tmp);
+            }
+            else
+            {
+                break;
+            }
+            // 4^(i+2)-3*2^(i + 2)+1
+            tmp = (1 << (2 * idx + 4)) - 3 * (1 << (idx + 2)) + 1;
+            if (tmp <= n)
+            {
+                ret.push_back(tmp);
+            }
+            else
+            {
+                break;
+            }
+
+            idx++;
+        }
+        
+        return ret;
+    };
+
+    vector<int> gaps = GetGaps(nums.size());
+    reverse(gaps.begin(), gaps.end());
+
+    for (int gapIdx = 0; gapIdx < gaps.size() && gaps[gapIdx] > 0; gapIdx++)
+    {
+        for (int i = gaps[gapIdx]; i < nums.size(); i++)
+        {
+            int tmp = i;
+
+            for (int j = i - gaps[gapIdx]; j >= 0 && nums[j] > nums[tmp]; j -= gaps[gapIdx])
+            {
+                swap(nums[j], nums[tmp]);
+                tmp = j;
+            }
+        }
+    }
+}
+```
+## 交换排序-冒泡排序(Bubble Sort)
+- 通过对待排序序列从前向后（从下标较小的元素开始）,依次**对相邻两个元素的值进行两两比较**，若发现**逆序**则交换，使值较大的元素逐渐从前移向后部，就如果水底下的气泡一样逐渐向上冒。
+
+```c++
+void BubbleSort(vector<int>& nums)
+{
+    for (int i = 1; i < nums.size(); i++)
+    {
+        for (int j = 0; j < nums.size() - i; j++)
+        {
+            if (nums[j] > nums[j + 1])
+            {
+                swap(nums[j], nums[j + 1]);
+            }
+        }
+    }
+}
+```
+## 交换排序-快速排序(Quick Sort)
+- 快速排序是一种高效的排序算法，基于分治法（Divide and Conquer）的思想
+- 它的核心是通过选择一个基准元素（pivot），将列表分为两部分：一部分小于基准元素，另一部分大于基准元素，然后递归地对这两部分进行排序。
+
+```c++
+
+```
+## 计数排序(Counting Sort)
+
+```c++
+```
+## 基数排序(Radix Sort)
+
+```c++
+```
+## 桶排序(Bucket Sort)
+
+```c++
+```
+## 归并排序(Merge Sort)
+
+```c++
+```
+## 奇偶排序(Odd-Even Sort)
+
+```c++
+```
