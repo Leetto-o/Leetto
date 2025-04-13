@@ -14,6 +14,7 @@ categories: [Algorithm]
 ```c++
 void SelectionSort(vector<int>& nums)
 {
+    cout << "Selection Sort\n";
     for (int i = 0; i < nums.size(); i++)
     {
         int minPos = i;
@@ -36,9 +37,8 @@ void SelectionSort(vector<int>& nums)
 ```c++
 void HeapSort(vector<int>& nums)
 {
-    // 更新堆
-    auto HeapAdjust = [&](int start, int end)
-    { 
+    cout << "Heap Sort\n";
+    auto HeapAdjust = [&](int start, int end){ 
         int fatherNode = start;
         int sonNode = 0;
 
@@ -59,14 +59,13 @@ void HeapSort(vector<int>& nums)
                 fatherNode = sonNode;
             }
         }
-    };
-    // 初始化大端堆
+        };
+    
     for (int sonNode = nums.size() / 2 - 1; sonNode >= 0 ; sonNode--)
     {
         HeapAdjust(sonNode, nums.size() - 1);
     }
 
-    // 将最大元素放到最后
     for (int i = nums.size() - 1; i >= 0; i--)
     {
         swap(nums[0], nums[i]);
@@ -81,17 +80,15 @@ void HeapSort(vector<int>& nums)
 ```c++
 void InsertionSort(vector<int>& nums)
 {
+    cout << "Insertion Sort\n";
     for (int i = 0; i < nums.size(); i++)
     {
         int tmp = i;
 
-        for (int j = i - 1; j >= 0; j--)
+        for (int j = i - 1; j >= 0 && nums[j] > nums[tmp]; j--)
         {
-            if (nums[j] > nums[tmp])
-            {
-                swap(nums[j], nums[tmp]);
-                tmp = j;
-            }
+            swap(nums[j], nums[tmp]);
+            tmp = j;
         }
     }
 }
@@ -108,9 +105,9 @@ void InsertionSort(vector<int>& nums)
 ```c++
 void ShellSort(vector<int>& nums)
 {
+    cout << "Shell Sort\n";
     // Sedgewick增量.
-    auto GetGaps = [&](int n) 
-    {
+    auto GetGaps = [&](int n) {
         vector<int> ret;
         int idx = 0;
         while (true)
@@ -140,7 +137,7 @@ void ShellSort(vector<int>& nums)
         }
         
         return ret;
-    };
+        };
 
     vector<int> gaps = GetGaps(nums.size());
     reverse(gaps.begin(), gaps.end());
@@ -149,13 +146,20 @@ void ShellSort(vector<int>& nums)
     {
         for (int i = gaps[gapIdx]; i < nums.size(); i++)
         {
-            int tmp = i;
+            int tmp = nums[i];
+            int pos = i;
 
-            for (int j = i - gaps[gapIdx]; j >= 0 && nums[j] > nums[tmp]; j -= gaps[gapIdx])
+            while (pos - gaps[gapIdx] >= 0 && tmp < nums[pos - gaps[gapIdx]])
             {
-                swap(nums[j], nums[tmp]);
-                tmp = j;
+                pos -= gaps[gapIdx];
             }
+
+            for (int j = i - gaps[gapIdx]; j >= pos; j -= gaps[gapIdx])
+            {
+                nums[j + gaps[gapIdx]] = nums[j];
+            }
+
+            nums[pos] = tmp;
         }
     }
 }
@@ -166,6 +170,7 @@ void ShellSort(vector<int>& nums)
 ```c++
 void BubbleSort(vector<int>& nums)
 {
+    cout << "Bubble Sort\n";
     for (int i = 1; i < nums.size(); i++)
     {
         for (int j = 0; j < nums.size() - i; j++)
@@ -181,27 +186,434 @@ void BubbleSort(vector<int>& nums)
 ## 交换排序-快速排序(Quick Sort)
 - 快速排序是一种高效的排序算法，基于分治法（Divide and Conquer）的思想
 - 它的核心是通过选择一个基准元素（pivot），将列表分为两部分：一部分小于基准元素，另一部分大于基准元素，然后递归地对这两部分进行排序。
+- 不同的分区策略对算法的影响不同，常见的有几种分区策略
+- Lomuto分区法，经典的分区算法
 
 ```c++
+void LomutoQuickSort(vector<int>& nums, int l, int r)
+{
+    // Lomuto partition.
+    auto LomutoPartition = [&](int l, int r)->int {
+        int pivot = nums[r];
+        int i = l;
+        for (int j = l; j < r; ++j)
+        {
+            if (nums[j] < pivot)
+            {
+                swap(nums[i], nums[j]);
+                ++i;
+            }
+        }
+        swap(nums[i], nums[r]);
+        return i;
+        };
 
+    // Quick sort.
+    if (l < r)
+    {
+        int p = LomutoPartition(l, r);
+        LomutoQuickSort(nums, l, p - 1);
+        LomutoQuickSort(nums, p + 1, r);
+    }
+}
+```
+
+- Hoare分区法，效率相比Lomuto更高
+
+```c++
+void HoareQuickSort(vector<int>& nums, int l, int r)
+{
+
+    // Hoare partition.
+    auto HoarePartition = [&](int l, int r)->int {
+        int pivot = nums[(l + r) / 2];
+        int i = l, j = r;
+        while (true)
+        {
+            while (nums[i] < pivot) i++;
+            while (nums[j] > pivot) j--;
+            if (i >= j)
+            {
+                return j;
+            }
+            swap(nums[i++], nums[j--]);
+        }
+        };
+
+    // Quick sort.
+    if (l < r)
+    {
+        int p = HoarePartition(l, r);
+        HoareQuickSort(nums, l, p);
+        HoareQuickSort(nums, p + 1, r);
+    }
+}
+```
+
+- 三路快排，对等于情况进行特殊处理，适用于重复元素较多的情况
+
+```c++
+void ThreeWayQuickSort(vector<int>& nums, int l, int r)
+{
+    auto ThreeWayPartition = [&](int l, int r)->pair<int, int> {
+        int pivot = nums[l];
+        int lt = l, i = l, gt = r;
+
+        while (i <= gt)
+        {
+            if (nums[i] < pivot)
+            {
+                swap(nums[lt], nums[i]);
+                ++lt;
+                ++i;
+            }
+            else if (nums[i] > pivot)
+            {
+                swap(nums[i], nums[gt]);
+                --gt;
+            }
+            else
+            {
+                ++i;
+            }
+        }
+
+        return { lt, gt };
+        };
+    
+    if (l < r)
+    {
+        int lt = 0;
+        int gt = 0;
+        tie(lt, gt) = ThreeWayPartition(l, r);
+        ThreeWayQuickSort(nums, l, lt - 1);
+        ThreeWayQuickSort(nums, gt + 1, r);
+    }
+}
+```
+
+- 迭代对每个分区进行快排
+
+```c++
+void QuickSort(vector<int>& nums)
+{
+    cout << "Quick Sort\n";
+    // Quick sort.
+    //LomutoQuickSort(nums, 0, nums.size() - 1);
+    HoareQuickSort(nums, 0, nums.size() - 1);
+    //ThreeWayQuickSort(nums, 0, nums.size() - 1);
+}
 ```
 ## 计数排序(Counting Sort)
+- 计数排序是一种**非比较排序算法**，适用于**整数数据且数据范围较小**的情况.
+- 它的核心思想是统计每个元素出现的次数，然后根据统计结果将元素放回正确的位置。
 
 ```c++
+// 计数排序(Counting Sort)
+void CountingSort(vector<int>& nums)
+{
+    cout << "Counting Sort\n";
+
+    // Find max element.
+    int max_val = *max_element(nums.begin(), nums.end());
+    vector<int> count(max_val + 1, 0);
+
+    // Counting.
+    for (int num : nums)
+    {
+        count[num]++;
+    }
+
+    // Accumulate counting.
+    for (int i = 1; i <= max_val; ++i)
+    {
+        count[i] += count[i - 1];
+    }
+
+    // Fill.
+    vector<int> output(nums.size());
+    for (int i = nums.size() - 1; i >= 0; --i)
+    {
+        int num = nums[i];
+        output[count[num] - 1] = num;
+        count[num]--;
+    }
+
+    nums = output;
+}
 ```
 ## 基数排序(Radix Sort)
+- 基数排序（Radix Sort）是一种**非比较型整数排序算法**，适用于**整数或固定长度的字符串排序**。
+- 核心思想是 按位比较，从最低位（LSD，Least Significant Digit）或最高位（MSD，Most Significant Digit）开始，逐位进行稳定排序（通常使用计数排序作为子排序算法）。
+- 基于LSD的基数排序算法
 
 ```c++
+void RadixSort(vector<int>& nums)
+{
+    cout << "Radix Sort\n";
+
+    auto GetDigit = [&](int n, int d)->int {
+        int divisor = 1;
+        for (int i = 0; i < d; ++i) {
+            divisor *= 10;
+        }
+        return (n / divisor) % 10;
+        };
+
+    // Get max element.
+    int maxNum = *max_element(nums.begin(), nums.end());
+    int maxDigits = 0;
+    while (maxNum > 0)
+    {
+        maxNum /= 10;
+        maxDigits++;
+    }
+
+    // From lowest digit to highest digit.
+    for (int d = 0; d < maxDigits; ++d)
+    {
+        // Sort with radix.
+        vector<int> count(10, 0);
+
+        // Count.
+        for (int num : nums)
+        {
+            int digit = GetDigit(num, d);
+            count[digit]++;
+        }
+
+        // Accumulate.
+        for (int i = 1; i < 10; ++i)
+        {
+            count[i] += count[i - 1];
+        }
+
+        // Fill.
+        vector<int> output(nums.size());
+        for (int i = nums.size() - 1; i >= 0; --i)
+        {
+            int digit = GetDigit(nums[i], d);
+            output[count[digit] - 1] = nums[i];
+            count[digit]--;
+        }
+
+        // Update.
+        nums = output;
+    }
+}
 ```
 ## 桶排序(Bucket Sort)
+- 桶排序（Bucket Sort）是一种**分布式排序算法**，适用于**数据均匀分布在一定范围**的情况。
+- 核心思想是将数据分到有限数量的桶中，每个桶单独排序（通常使用插入排序等简单算法），最后合并所有桶的结果。
 
 ```c++
+void BucketSort(vector<int>& nums)
+{
+    cout << "Bucket Sort\n";
+
+    // Initial buckets.
+    const int bucketNum = sqrt(nums.size()) + 1;
+    vector<vector<int>> buckets(bucketNum);
+    int maxNum = *max_element(nums.begin(), nums.end());
+    int minNum = *min_element(nums.begin(), nums.end());
+    int range = maxNum - minNum + 1;
+
+    // Put numbers into bucket.
+    for (int num : nums)
+    {
+        // Calculate index.
+        int bucket_idx = float(num - minNum) / range * bucketNum;
+        buckets[bucket_idx].push_back(num);
+    }
+
+    // Sort number in each bucket.
+    for (auto& bucket : buckets)
+    {
+        sort(bucket.begin(), bucket.end());
+    }
+
+    // Merge.
+    int idx = 0;
+    for (const auto& bucket : buckets)
+    {
+        for (float num : bucket)
+        {
+            nums[idx++] = num;
+        }
+    }
+}
 ```
 ## 归并排序(Merge Sort)
+- 归并排序（Merge Sort）是一种**分治算法**，采用**递归或迭代**的方式将数组分成两半分别排序，再合并两个有序子数组。
+- 核心特点是稳定排序,适合大数据量排序。
 
 ```c++
+void MergeSortRecu(vector<int>& nums, int l, int r)
+{
+    auto Merge = [&](int l, int mid, int r) {
+        vector<int> temp(r - l + 1);
+
+        int i = l;
+        int j = mid + 1;
+        int k = 0;
+
+        // Merge.
+        while (i <= mid && j <= r)
+        {
+            if (nums[i] <= nums[j])
+            {
+                temp[k++] = nums[i++];
+            }
+            else
+            {
+                temp[k++] = nums[j++];
+            }
+        }
+
+        while (i <= mid)
+        {
+            temp[k++] = nums[i++];
+        }
+        while (j <= r)
+        {
+            temp[k++] = nums[j++];
+        }
+
+        for (int p = 0; p < k; p++)
+        {
+            nums[l + p] = temp[p];
+        }
+        };
+
+    if (l >= r)
+    {
+        return;
+    }
+
+    int mid = (l + r) / 2;
+    MergeSortRecu(nums, l, mid);
+    MergeSortRecu(nums, mid + 1, r);
+    Merge(l, mid, r);
+}
+
+void MergeSort(vector<int>& nums)
+{
+    cout << "Merge Sort\n";
+
+    MergeSortRecu(nums, 0, nums.size() - 1);
+}
 ```
 ## 奇偶排序(Odd-Even Sort)
+- 奇偶排序（Odd-Even Sort）是一种基于冒泡排序的**并行排序算法**，适用于**多线程**环境或硬件加速排序。
+- 核心思想是通过**奇偶索引比较交换**，逐步将最大/最小值移动到正确位置。
 
 ```c++
+void OddEvenSort(vector<int>& nums)
+{
+    cout << "Odd-Even Sort\n";
+
+    bool isSorted = false;
+    int n = nums.size();
+
+    while (!isSorted)
+    {
+        isSorted = true;
+
+        // Odd Stage（Compare (1,2), (3,4), ...）
+        for (int i = 1; i < n - 1; i += 2)
+        {
+            if (nums[i] > nums[i + 1])
+            {
+                std::swap(nums[i], nums[i + 1]);
+                isSorted = false;
+            }
+        }
+
+        // Even Stage（Compare (0,1), (2,3), ...）
+        for (int i = 0; i < n - 1; i += 2)
+        {
+            if (nums[i] > nums[i + 1])
+            {
+                std::swap(nums[i], nums[i + 1]);
+                isSorted = false;
+            }
+        }
+    }
+}
+```
+- 并行的奇偶排序（多线程）
+
+```c++
+void ParallelOddEvenSort(vector<int>& nums)
+{
+        const int n = nums.size();
+    bool isSorted = false;
+    int phase = 0; // 0: even, 1: odd
+
+    // Barrier（as C++20 std::barrier）
+    int threadCount = thread::hardware_concurrency();
+    threadCount = max(1, min(threadCount, n / 10));
+    cout << "Count of threads:" << threadCount << endl;
+
+    mutex mtx;
+    condition_variable cv;
+    int waitingThreads = 0;
+    barrier br(threadCount);
+
+    auto worker = [&](int start, int end) {
+        while (!isSorted)
+        {
+
+            bool localSorted = true;
+
+            // Odd or Even phase.
+            for (int i = start + phase; i < end; i += 2)
+            {
+                if (i + 1 < n && nums[i] > nums[i + 1])
+                {
+                    swap(nums[i], nums[i + 1]);
+                    localSorted = false;
+                }
+            }
+
+
+
+            // Wait all threads completed.
+            {
+                unique_lock<mutex> lock(mtx);
+                ++waitingThreads;
+
+                if (waitingThreads == 1) {
+                    isSorted = true;
+                }
+                else if (waitingThreads == threadCount)
+                {
+                    phase ^= 1;
+                    waitingThreads = 0;
+                }
+
+                isSorted &= localSorted;
+            }
+
+            br.arrive_and_wait();
+        }
+        };
+
+    // Create threads.
+    vector<thread> threads;
+    const int chunkSize = (n + threadCount - 1) / threadCount;
+
+    for (int i = 0; i < threadCount; ++i)
+    {
+        int start = i * chunkSize;
+        int end = min(start + chunkSize, n);
+        threads.emplace_back(worker, start, end);
+    }
+
+    // Wait all thread completed.
+    for (auto& t : threads)
+    {
+        t.join();
+    }
+}
 ```
