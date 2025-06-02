@@ -74,17 +74,19 @@ a_{i1} & a_{ij} & a_{in}\\
 a_{m1} & \cdots & a_{mn}
 \end{vmatrix}
 $$
+
 ## 代数余子式
 - n阶矩阵A,划去A的(i, j)元所在的第i行和第j列，剩余元素按原来顺序构成一个n-1阶行列式，成为A的(i, j)元的**余子式**，记为M<sub>ij</sub>
-- 令A<sub>ij</sub>=(-1)<sup>(i+j)</sup>M<sub>ij</sub>,成为**代数余子式**
+- 令A<sub>ij</sub>=(-1)<sup>(i+j)</sup>M<sub>ij</sub>,成为**代数余子式**  
 $$
-A=\begin{vmatrix}
+A=\begin{bmatrix}
 a_{11} & a_{12} & a_{13} \\
 a_{21} & a_{22} & a_{23}  \\
 a_{31} & a_{23} & a_{33}
-\end{vmatrix}
+\end{bmatrix}
+$$  
 $$
-$$a_{11}
+a_{11}
 的余子式为
 \begin{vmatrix}
 a_{22} & a_{23}  \\
@@ -92,20 +94,21 @@ a_{23} & a_{33}
 \end{vmatrix}
 $$
 - |A| = a<sub>i1</sub>·A<sub>i1</sub> + ... + a<sub>in</sub>·A<sub>in</sub>=a<sub>1j</sub>·A<sub>1j</sub> + ... + a<sub>nj</sub>·A<sub>nj</sub>  
-- 范德蒙行列式
+- 范德蒙行列式  
 $$
 \begin{vmatrix}
 1 & \cdots & 1 \\
 \vdots & \ddots & \vdots  \\
 a_{1}^{n-1} & \cdots & a_{n}^{n-1}
-\end{vmatrix} = \prod_{1≤j<i≤n} (a_{i} - a_{j})
+\end{vmatrix} = \prod_{1≤j＜i≤n} (a_{i} - a_{j})
 $$
+
 ## 拉普拉斯定理
 - n阶矩阵A取第i<sub>1</sub>,...,i<sub>k</sub>行，第j<sub>1</sub>,...,i<sub>k</sub>列，|A|等于k行形成的所有k阶子式与代数余子式的乘积之和  
 # 线性空间
 ## 线性空间定义
 - 非空集合S上的一个代数运算是指S×S到S的一个映射
-- V是一个非空集合，K是一个数域，如果V上有一个运行，称为**加法**，即(α,β)|->α+β，K与V之间有一个运算，称为数量乘法，即K×V->V:(k,α)|->kα
+- V是一个非空集合，K是一个数域，如果V上有一个运行，称为**加法**，即(α,β)\|-\>α+β，K与V之间有一个运算，称为**数量乘法**，即K×V->V:(k,α)\|->kα
 - 且满足以下8个运算法则  
   1. α+β=β+α
   2. (α+β)+γ=α+(β+γ)
