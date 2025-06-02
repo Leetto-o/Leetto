@@ -7,15 +7,15 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   <title>高等代数</title>
-  <meta name="description" content="矩阵行列式性质  转置不变性  A的第i行×k得到B，则k·|A| = |B|$\begin{vmatrix}a_{11} & \cdots & a_{1n} \\\vdots & \ddots & \vdots \\a_{i1}·k & a_{ij}·k & a_{in}·k\\\vdots & \ddots ...">
+  <meta name="description" content="矩阵行列式性质  转置不变性  A的第i行×k得到B，则k·|A| = |B|$\begin{vmatrix}a_{11} & \cdots & a_{1n} \\\vdots & \ddots & \vdots \\a_{i1}·k & a_{ij}·k & a_{in}·k \\\vdots & \ddots...">
   <link rel="stylesheet" href="/Leetto/css/main.css">
   <link rel="canonical" href="http://Leetto-o.github.io/Leetto/math/2025/05/30/%E9%AB%98%E7%AD%89%E4%BB%A3%E6%95%B0.html">
   <link rel="alternate" type="application/rss+xml" title="LeeNote" href="http://Leetto-o.github.io/Leetto/feed.xml">
   <script>
     MathJax = {
       tex: {
-        inlineMath: [['$', '$'], ['\$', '\$']],
-        displayMath: [['$$', '$$'], ['\$$', '\$$']],
+        inlineMath: [['$', '$']],
+        displayMath: [['$$', '$$']],
         processEscapes: true
       }
     };
@@ -80,10 +80,27 @@
 <span class="kdmath">$\begin{vmatrix}
 a_{11} & \cdots & a_{1n} \\
 \vdots & \ddots & \vdots \\
-a_{i1}·k & a_{ij}·k & a_{in}·k\\
+a_{i1}·k & a_{ij}·k & a_{in}·k \\
 \vdots & \ddots & \vdots \\
-a_{m1} & \cdots & a_{mn}
+a_{m1} & \cdots & a_{mn} \\
 \end{vmatrix} = k·
+\begin{vmatrix}
+a_{11} & \cdots & a_{1n} \\
+\vdots & \ddots & \vdots \\
+a_{i1} & a_{ij} & a_{in} \\
+\vdots & \ddots & \vdots \\
+a_{m1} & \cdots & a_{mn} \\
+\end{vmatrix}
+\quad$</span></li>
+  <li>第i行分解<br />
+<span class="kdmath">$\begin{vmatrix}
+a_{11} & \cdots & a_{1n} \\
+\vdots & \ddots & \vdots \\
+a_{i1}+b_{i1} & a_{ij}+b_{ij} & a_{in}+b_{in} \\
+\vdots & \ddots & \vdots \\
+a_{m1} & \cdots & a_{mn} \\
+\end{vmatrix}
+=
 \begin{vmatrix}
 a_{11} & \cdots & a_{1n} \\
 \vdots & \ddots & \vdots \\
@@ -91,28 +108,11 @@ a_{i1} & a_{ij} & a_{in} \\
 \vdots & \ddots & \vdots \\
 a_{m1} & \cdots & a_{mn}
 \end{vmatrix}
-\quad$</span></li>
-  <li>第i行分解<br />
-<span class="kdmath">$\begin{vmatrix}
-a_{11} & \cdots & a_{1n} \\
-\vdots & \ddots & \vdots \\
-a_{i1}+b_{i1} & a_{ij}+b_{ij} & a_{in}+b_{in}\\
-\vdots & \ddots & \vdots \\
-a_{m1} & \cdots & a_{mn}
-\end{vmatrix}
-=
-\begin{vmatrix}
-a_{11} & \cdots & a_{1n} \\
-\vdots & \ddots & \vdots \\
-a_{i1} & a_{ij} & a_{in}\\
-\vdots & \ddots & \vdots \\
-a_{m1} & \cdots & a_{mn}
-\end{vmatrix}
 +
 \begin{vmatrix}
 a_{11} & \cdots & a_{1n} \\
 \vdots & \ddots & \vdots \\
-b_{i1} & b_{ij} & b_{in}\\
+b_{i1} & b_{ij} & b_{in} \\
 \vdots & \ddots & \vdots \\
 a_{m1} & \cdots & a_{mn}
 \end{vmatrix}$</span></li>
@@ -125,35 +125,37 @@ a_{11} & \cdots & a_{1n} \\
 \vdots & \ddots & \vdots \\
 a_{i1} & a_{ij} & a_{in} \\
 \vdots & \ddots & \vdots \\
-a_{k1}+l·a_{i1} & a_{kj}+l·a_{ij} & a_{kn}+l·a_{in}\\
+a_{k1}+l·a_{i1} & a_{kj}+l·a_{ij} & a_{kn}+l·a_{in} \\
 \vdots & \ddots & \vdots \\
-a_{m1} & \cdots & a_{mn}
+a_{m1} & \cdots & a_{mn} \\
 \end{vmatrix}
 =
 \begin{vmatrix}
 a_{11} & \cdots & a_{1n} \\
 \vdots & \ddots & \vdots \\
-a_{i1} & a_{ij} & a_{in}\\
+a_{i1} & a_{ij} & a_{in} \\
 \vdots & \ddots & \vdots \\
-a_{m1} & \cdots & a_{mn}
+a_{m1} & \cdots & a_{mn} \\
 \end{vmatrix}$</span></li>
 </ol>
 
 <h2 id="代数余子式">代数余子式</h2>
 <ul>
   <li>n阶矩阵A,划去A的(i, j)元所在的第i行和第j列，剩余元素按原来顺序构成一个n-1阶行列式，成为A的(i, j)元的<strong>余子式</strong>，记为M<sub>ij</sub></li>
-  <li>令A<sub>ij</sub>=(-1)<sup>(i+j)</sup>M<sub>ij</sub>,成为<strong>代数余子式</strong><br />
+  <li>
+    <p>令A<sub>ij</sub>=(-1)<sup>(i+j)</sup>M<sub>ij</sub>,称为<strong>代数余子式</strong><br />
 <span class="kdmath">$A=\begin{bmatrix}
 a_{11} & a_{12} & a_{13} \\
-a_{21} & a_{22} & a_{23}  \\
-a_{31} & a_{23} & a_{33}
+a_{21} & a_{22} & a_{23} \\
+a_{31} & a_{23} & a_{33} \\
 \end{bmatrix}$</span><br />
 <span class="kdmath">$a_{11}
 的余子式为
 \begin{vmatrix}
-a_{22} & a_{23}  \\
-a_{23} & a_{33}
-\end{vmatrix}$</span></li>
+a_{22} & a_{23} \\
+a_{23} & a_{33} \\
+\end{vmatrix}$</span></p>
+  </li>
   <li>
     <table>
       <tbody>
@@ -164,20 +166,35 @@ a_{23} & a_{33}
       </tbody>
     </table>
   </li>
-  <li>范德蒙行列式<br />
-<span class="kdmath">$\begin{vmatrix}
-1 & \cdots & 1 \\
-\vdots & \ddots & \vdots  \\
-a_{1}^{n-1} & \cdots & a_{n}^{n-1}
-\end{vmatrix} = \prod_{1≤j＜i≤n} (a_{i} - a_{j})$</span></li>
+  <li>范德蒙行列式</li>
 </ul>
+
+<div class="kdmath">$$
+\begin{vmatrix}
+1 & \cdots & 1 \\
+\vdots & \ddots & \vdots \\
+a_{1}^{n-1} & \cdots & a_{n}^{n-1} \\
+\end{vmatrix} = \prod_{1≤j＜i≤n} (a_{i} - a_{j})
+$$</div>
 
 <h2 id="拉普拉斯定理">拉普拉斯定理</h2>
 <ul>
-  <li>n阶矩阵A取第i<sub>1</sub>,…,i<sub>k</sub>行，第j<sub>1</sub>,…,i<sub>k</sub>列，|A|等于k行形成的所有k阶子式与代数余子式的乘积之和
-    <h1 id="线性空间">线性空间</h1>
-    <h2 id="线性空间定义">线性空间定义</h2>
+  <li>
+    <table>
+      <tbody>
+        <tr>
+          <td>n阶矩阵A取第i<sub>1</sub>,…,i<sub>k</sub>行，第j<sub>1</sub>,…,i<sub>k</sub>列，</td>
+          <td>A</td>
+          <td>等于k行形成的所有k阶子式与代数余子式的乘积之和</td>
+        </tr>
+      </tbody>
+    </table>
   </li>
+</ul>
+
+<h1 id="线性空间">线性空间</h1>
+<h2 id="线性空间定义">线性空间定义</h2>
+<ul>
   <li>非空集合S上的一个代数运算是指S×S到S的一个映射</li>
   <li>V是一个非空集合，K是一个数域，如果V上有一个运行，称为<strong>加法</strong>，即(α,β)|-&gt;α+β，K与V之间有一个运算，称为<strong>数量乘法</strong>，即K×V-&gt;V:(k,α)|-&gt;kα</li>
   <li>且满足以下8个运算法则

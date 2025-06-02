@@ -7,8 +7,8 @@ A hub for all things programming, algorithms, computer science, and math. Here, 
 </description>
     <link>http://Leetto-o.github.io/Leetto/</link>
     <atom:link href="http://Leetto-o.github.io/Leetto/feed.xml" rel="self" type="application/rss+xml"/>
-    <pubDate>Mon, 02 Jun 2025 11:11:53 +0800</pubDate>
-    <lastBuildDate>Mon, 02 Jun 2025 11:11:53 +0800</lastBuildDate>
+    <pubDate>Mon, 02 Jun 2025 11:24:30 +0800</pubDate>
+    <lastBuildDate>Mon, 02 Jun 2025 11:24:30 +0800</lastBuildDate>
     <generator>Jekyll v3.1.6</generator>
     
       <item>
@@ -21,10 +21,27 @@ A hub for all things programming, algorithms, computer science, and math. Here, 
 &lt;span class=&quot;kdmath&quot;&gt;$\begin{vmatrix}
 a_{11} &amp; \cdots &amp; a_{1n} \\
 \vdots &amp; \ddots &amp; \vdots \\
-a_{i1}·k &amp; a_{ij}·k &amp; a_{in}·k\\
+a_{i1}·k &amp; a_{ij}·k &amp; a_{in}·k \\
 \vdots &amp; \ddots &amp; \vdots \\
-a_{m1} &amp; \cdots &amp; a_{mn}
+a_{m1} &amp; \cdots &amp; a_{mn} \\
 \end{vmatrix} = k·
+\begin{vmatrix}
+a_{11} &amp; \cdots &amp; a_{1n} \\
+\vdots &amp; \ddots &amp; \vdots \\
+a_{i1} &amp; a_{ij} &amp; a_{in} \\
+\vdots &amp; \ddots &amp; \vdots \\
+a_{m1} &amp; \cdots &amp; a_{mn} \\
+\end{vmatrix}
+\quad$&lt;/span&gt;&lt;/li&gt;
+  &lt;li&gt;第i行分解&lt;br /&gt;
+&lt;span class=&quot;kdmath&quot;&gt;$\begin{vmatrix}
+a_{11} &amp; \cdots &amp; a_{1n} \\
+\vdots &amp; \ddots &amp; \vdots \\
+a_{i1}+b_{i1} &amp; a_{ij}+b_{ij} &amp; a_{in}+b_{in} \\
+\vdots &amp; \ddots &amp; \vdots \\
+a_{m1} &amp; \cdots &amp; a_{mn} \\
+\end{vmatrix}
+=
 \begin{vmatrix}
 a_{11} &amp; \cdots &amp; a_{1n} \\
 \vdots &amp; \ddots &amp; \vdots \\
@@ -32,28 +49,11 @@ a_{i1} &amp; a_{ij} &amp; a_{in} \\
 \vdots &amp; \ddots &amp; \vdots \\
 a_{m1} &amp; \cdots &amp; a_{mn}
 \end{vmatrix}
-\quad$&lt;/span&gt;&lt;/li&gt;
-  &lt;li&gt;第i行分解&lt;br /&gt;
-&lt;span class=&quot;kdmath&quot;&gt;$\begin{vmatrix}
-a_{11} &amp; \cdots &amp; a_{1n} \\
-\vdots &amp; \ddots &amp; \vdots \\
-a_{i1}+b_{i1} &amp; a_{ij}+b_{ij} &amp; a_{in}+b_{in}\\
-\vdots &amp; \ddots &amp; \vdots \\
-a_{m1} &amp; \cdots &amp; a_{mn}
-\end{vmatrix}
-=
-\begin{vmatrix}
-a_{11} &amp; \cdots &amp; a_{1n} \\
-\vdots &amp; \ddots &amp; \vdots \\
-a_{i1} &amp; a_{ij} &amp; a_{in}\\
-\vdots &amp; \ddots &amp; \vdots \\
-a_{m1} &amp; \cdots &amp; a_{mn}
-\end{vmatrix}
 +
 \begin{vmatrix}
 a_{11} &amp; \cdots &amp; a_{1n} \\
 \vdots &amp; \ddots &amp; \vdots \\
-b_{i1} &amp; b_{ij} &amp; b_{in}\\
+b_{i1} &amp; b_{ij} &amp; b_{in} \\
 \vdots &amp; \ddots &amp; \vdots \\
 a_{m1} &amp; \cdots &amp; a_{mn}
 \end{vmatrix}$&lt;/span&gt;&lt;/li&gt;
@@ -66,35 +66,37 @@ a_{11} &amp; \cdots &amp; a_{1n} \\
 \vdots &amp; \ddots &amp; \vdots \\
 a_{i1} &amp; a_{ij} &amp; a_{in} \\
 \vdots &amp; \ddots &amp; \vdots \\
-a_{k1}+l·a_{i1} &amp; a_{kj}+l·a_{ij} &amp; a_{kn}+l·a_{in}\\
+a_{k1}+l·a_{i1} &amp; a_{kj}+l·a_{ij} &amp; a_{kn}+l·a_{in} \\
 \vdots &amp; \ddots &amp; \vdots \\
-a_{m1} &amp; \cdots &amp; a_{mn}
+a_{m1} &amp; \cdots &amp; a_{mn} \\
 \end{vmatrix}
 =
 \begin{vmatrix}
 a_{11} &amp; \cdots &amp; a_{1n} \\
 \vdots &amp; \ddots &amp; \vdots \\
-a_{i1} &amp; a_{ij} &amp; a_{in}\\
+a_{i1} &amp; a_{ij} &amp; a_{in} \\
 \vdots &amp; \ddots &amp; \vdots \\
-a_{m1} &amp; \cdots &amp; a_{mn}
+a_{m1} &amp; \cdots &amp; a_{mn} \\
 \end{vmatrix}$&lt;/span&gt;&lt;/li&gt;
 &lt;/ol&gt;
 
 &lt;h2 id=&quot;代数余子式&quot;&gt;代数余子式&lt;/h2&gt;
 &lt;ul&gt;
   &lt;li&gt;n阶矩阵A,划去A的(i, j)元所在的第i行和第j列，剩余元素按原来顺序构成一个n-1阶行列式，成为A的(i, j)元的&lt;strong&gt;余子式&lt;/strong&gt;，记为M&lt;sub&gt;ij&lt;/sub&gt;&lt;/li&gt;
-  &lt;li&gt;令A&lt;sub&gt;ij&lt;/sub&gt;=(-1)&lt;sup&gt;(i+j)&lt;/sup&gt;M&lt;sub&gt;ij&lt;/sub&gt;,成为&lt;strong&gt;代数余子式&lt;/strong&gt;&lt;br /&gt;
+  &lt;li&gt;
+    &lt;p&gt;令A&lt;sub&gt;ij&lt;/sub&gt;=(-1)&lt;sup&gt;(i+j)&lt;/sup&gt;M&lt;sub&gt;ij&lt;/sub&gt;,称为&lt;strong&gt;代数余子式&lt;/strong&gt;&lt;br /&gt;
 &lt;span class=&quot;kdmath&quot;&gt;$A=\begin{bmatrix}
 a_{11} &amp; a_{12} &amp; a_{13} \\
-a_{21} &amp; a_{22} &amp; a_{23}  \\
-a_{31} &amp; a_{23} &amp; a_{33}
+a_{21} &amp; a_{22} &amp; a_{23} \\
+a_{31} &amp; a_{23} &amp; a_{33} \\
 \end{bmatrix}$&lt;/span&gt;&lt;br /&gt;
 &lt;span class=&quot;kdmath&quot;&gt;$a_{11}
 的余子式为
 \begin{vmatrix}
-a_{22} &amp; a_{23}  \\
-a_{23} &amp; a_{33}
-\end{vmatrix}$&lt;/span&gt;&lt;/li&gt;
+a_{22} &amp; a_{23} \\
+a_{23} &amp; a_{33} \\
+\end{vmatrix}$&lt;/span&gt;&lt;/p&gt;
+  &lt;/li&gt;
   &lt;li&gt;
     &lt;table&gt;
       &lt;tbody&gt;
@@ -105,20 +107,35 @@ a_{23} &amp; a_{33}
       &lt;/tbody&gt;
     &lt;/table&gt;
   &lt;/li&gt;
-  &lt;li&gt;范德蒙行列式&lt;br /&gt;
-&lt;span class=&quot;kdmath&quot;&gt;$\begin{vmatrix}
-1 &amp; \cdots &amp; 1 \\
-\vdots &amp; \ddots &amp; \vdots  \\
-a_{1}^{n-1} &amp; \cdots &amp; a_{n}^{n-1}
-\end{vmatrix} = \prod_{1≤j＜i≤n} (a_{i} - a_{j})$&lt;/span&gt;&lt;/li&gt;
+  &lt;li&gt;范德蒙行列式&lt;/li&gt;
 &lt;/ul&gt;
+
+&lt;div class=&quot;kdmath&quot;&gt;$$
+\begin{vmatrix}
+1 &amp; \cdots &amp; 1 \\
+\vdots &amp; \ddots &amp; \vdots \\
+a_{1}^{n-1} &amp; \cdots &amp; a_{n}^{n-1} \\
+\end{vmatrix} = \prod_{1≤j＜i≤n} (a_{i} - a_{j})
+$$&lt;/div&gt;
 
 &lt;h2 id=&quot;拉普拉斯定理&quot;&gt;拉普拉斯定理&lt;/h2&gt;
 &lt;ul&gt;
-  &lt;li&gt;n阶矩阵A取第i&lt;sub&gt;1&lt;/sub&gt;,…,i&lt;sub&gt;k&lt;/sub&gt;行，第j&lt;sub&gt;1&lt;/sub&gt;,…,i&lt;sub&gt;k&lt;/sub&gt;列，|A|等于k行形成的所有k阶子式与代数余子式的乘积之和
-    &lt;h1 id=&quot;线性空间&quot;&gt;线性空间&lt;/h1&gt;
-    &lt;h2 id=&quot;线性空间定义&quot;&gt;线性空间定义&lt;/h2&gt;
+  &lt;li&gt;
+    &lt;table&gt;
+      &lt;tbody&gt;
+        &lt;tr&gt;
+          &lt;td&gt;n阶矩阵A取第i&lt;sub&gt;1&lt;/sub&gt;,…,i&lt;sub&gt;k&lt;/sub&gt;行，第j&lt;sub&gt;1&lt;/sub&gt;,…,i&lt;sub&gt;k&lt;/sub&gt;列，&lt;/td&gt;
+          &lt;td&gt;A&lt;/td&gt;
+          &lt;td&gt;等于k行形成的所有k阶子式与代数余子式的乘积之和&lt;/td&gt;
+        &lt;/tr&gt;
+      &lt;/tbody&gt;
+    &lt;/table&gt;
   &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h1 id=&quot;线性空间&quot;&gt;线性空间&lt;/h1&gt;
+&lt;h2 id=&quot;线性空间定义&quot;&gt;线性空间定义&lt;/h2&gt;
+&lt;ul&gt;
   &lt;li&gt;非空集合S上的一个代数运算是指S×S到S的一个映射&lt;/li&gt;
   &lt;li&gt;V是一个非空集合，K是一个数域，如果V上有一个运行，称为&lt;strong&gt;加法&lt;/strong&gt;，即(α,β)|-&amp;gt;α+β，K与V之间有一个运算，称为&lt;strong&gt;数量乘法&lt;/strong&gt;，即K×V-&amp;gt;V:(k,α)|-&amp;gt;kα&lt;/li&gt;
   &lt;li&gt;且满足以下8个运算法则
