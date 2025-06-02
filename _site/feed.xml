@@ -7,9 +7,87 @@ A hub for all things programming, algorithms, computer science, and math. Here, 
 </description>
     <link>http://Leetto-o.github.io/Leetto/</link>
     <atom:link href="http://Leetto-o.github.io/Leetto/feed.xml" rel="self" type="application/rss+xml"/>
-    <pubDate>Sun, 13 Apr 2025 17:54:38 +0800</pubDate>
-    <lastBuildDate>Sun, 13 Apr 2025 17:54:38 +0800</lastBuildDate>
+    <pubDate>Fri, 30 May 2025 21:16:32 +0800</pubDate>
+    <lastBuildDate>Fri, 30 May 2025 21:16:32 +0800</lastBuildDate>
     <generator>Jekyll v3.1.6</generator>
+    
+      <item>
+        <title>高等代数</title>
+        <description>&lt;h1 id=&quot;矩阵&quot;&gt;矩阵&lt;/h1&gt;
+&lt;h2 id=&quot;行列式性质&quot;&gt;行列式性质&lt;/h2&gt;
+&lt;ol&gt;
+  &lt;li&gt;转置不变性&lt;/li&gt;
+  &lt;li&gt;A的第i行×k得到B，则k·|A| = |B|&lt;br /&gt;
+&lt;span class=&quot;kdmath&quot;&gt;$\begin{vmatrix}
+a_{11} &amp; \cdots &amp; a_{1n} \\
+\vdots &amp; \ddots &amp; \vdots \\
+a_{i1}·k &amp; a_{ij}·k &amp; a_{in}·k\\
+\vdots &amp; \ddots &amp; \vdots \\
+a_{m1} &amp; \cdots &amp; a_{mn}
+\end{vmatrix} = k·
+\begin{vmatrix}
+a_{11} &amp; \cdots &amp; a_{1n} \\
+\vdots &amp; \ddots &amp; \vdots \\
+a_{i1} &amp; a_{ij} &amp; a_{in} \\
+\vdots &amp; \ddots &amp; \vdots \\
+a_{m1} &amp; \cdots &amp; a_{mn}
+\end{vmatrix}
+\quad$&lt;/span&gt;&lt;/li&gt;
+  &lt;li&gt;第i行分解&lt;br /&gt;
+&lt;span class=&quot;kdmath&quot;&gt;$\begin{vmatrix}
+a_{11} &amp; \cdots &amp; a_{1n} \\
+\vdots &amp; \ddots &amp; \vdots \\
+a_{i1}+b_{i1} &amp; a_{ij}+b_{ij} &amp; a_{in}+b_{in}\\
+\vdots &amp; \ddots &amp; \vdots \\
+a_{m1} &amp; \cdots &amp; a_{mn}
+\end{vmatrix}
+=
+\begin{vmatrix}
+a_{11} &amp; \cdots &amp; a_{1n} \\
+\vdots &amp; \ddots &amp; \vdots \\
+a_{i1} &amp; a_{ij} &amp; a_{in}\\
+\vdots &amp; \ddots &amp; \vdots \\
+a_{m1} &amp; \cdots &amp; a_{mn}
+\end{vmatrix}
++
+\begin{vmatrix}
+a_{11} &amp; \cdots &amp; a_{1n} \\
+\vdots &amp; \ddots &amp; \vdots \\
+b_{i1} &amp; b_{ij} &amp; b_{in}\\
+\vdots &amp; \ddots &amp; \vdots \\
+a_{m1} &amp; \cdots &amp; a_{mn}
+\end{vmatrix}$&lt;/span&gt;&lt;/li&gt;
+  &lt;li&gt;交换两行或两列，行列式互为相反数&lt;/li&gt;
+  &lt;li&gt;两行相等，行列式为0&lt;/li&gt;
+  &lt;li&gt;两行成比例，行列式为0&lt;/li&gt;
+  &lt;li&gt;A的第i行×l加到第j行得到B，则|A| = |B|&lt;br /&gt;
+&lt;span class=&quot;kdmath&quot;&gt;$\begin{vmatrix}
+a_{11} &amp; \cdots &amp; a_{1n} \\
+\vdots &amp; \ddots &amp; \vdots \\
+a_{i1} &amp; a_{ij} &amp; a_{in} \\
+\vdots &amp; \ddots &amp; \vdots \\
+a_{k1}+l·a_{i1} &amp; a_{kj}+l·a_{ij} &amp; a_{kn}+l·a_{in}\\
+\vdots &amp; \ddots &amp; \vdots \\
+a_{m1} &amp; \cdots &amp; a_{mn}
+\end{vmatrix}
+=
+\begin{vmatrix}
+a_{11} &amp; \cdots &amp; a_{1n} \\
+\vdots &amp; \ddots &amp; \vdots \\
+a_{i1} &amp; a_{ij} &amp; a_{in}\\
+\vdots &amp; \ddots &amp; \vdots \\
+a_{m1} &amp; \cdots &amp; a_{mn}
+\end{vmatrix}$&lt;/span&gt;&lt;/li&gt;
+&lt;/ol&gt;
+</description>
+        <pubDate>Fri, 30 May 2025 00:00:00 +0800</pubDate>
+        <link>http://Leetto-o.github.io/Leetto/math/2025/05/30/%E9%AB%98%E7%AD%89%E4%BB%A3%E6%95%B0.html</link>
+        <guid isPermaLink="true">http://Leetto-o.github.io/Leetto/math/2025/05/30/%E9%AB%98%E7%AD%89%E4%BB%A3%E6%95%B0.html</guid>
+        
+        
+        <category>Math</category>
+        
+      </item>
     
       <item>
         <title>摩尔投票法</title>

@@ -8,10 +8,20 @@
 
   <title>函数对象</title>
   <meta name="description" content="函数对象任何定义了函数调用运算符的对象都是函数对象。C++ 支持创建、操作新的函数对象，同时也提供了许多内置的函数对象。invoke函数  std::invoke是 C++17标准库中引入的一个函数模板，它的引入就是为了解决调用不同类型的可调用对象，需要使用不同的语法带来的冗余问题，invoke提供了一种统一的调...">
-
   <link rel="stylesheet" href="/Leetto/css/main.css">
   <link rel="canonical" href="http://Leetto-o.github.io/Leetto/cpp/2025/04/04/%E5%87%BD%E6%95%B0%E5%AF%B9%E8%B1%A1.html">
   <link rel="alternate" type="application/rss+xml" title="LeeNote" href="http://Leetto-o.github.io/Leetto/feed.xml">
+  <script>
+    MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\$', '\$']],
+        displayMath: [['$$', '$$'], ['\$$', '\$$']],
+        processEscapes: true
+      }
+    };
+  </script>
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
 </head>
 
 
@@ -317,7 +327,12 @@ A hub for all things programming, algorithms, computer science, and math. Here, 
 
 </footer>
 
-
+    <script>
+      document.addEventListener('DOMContentLoaded', function() {
+        if (window.MathJax) {
+          MathJax.typesetPromise();
+        }
+      });
+    </script>
   </body>
-
 </html>

@@ -8,10 +8,20 @@
 
   <title>Welcome to LeeNote!</title>
   <meta name="description" content="欢迎访问  用来保存我的一些学习笔记，可能包括数学、计算机、算法、游戏引擎与设计等方面的内容">
-
   <link rel="stylesheet" href="/Leetto/css/main.css">
   <link rel="canonical" href="http://Leetto-o.github.io/Leetto/article/2025/03/23/welcome-to-LeeNote.html">
   <link rel="alternate" type="application/rss+xml" title="LeeNote" href="http://Leetto-o.github.io/Leetto/feed.xml">
+  <script>
+    MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\$', '\$']],
+        displayMath: [['$$', '$$'], ['\$$', '\$$']],
+        processEscapes: true
+      }
+    };
+  </script>
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
 </head>
 
 
@@ -113,7 +123,12 @@ A hub for all things programming, algorithms, computer science, and math. Here, 
 
 </footer>
 
-
+    <script>
+      document.addEventListener('DOMContentLoaded', function() {
+        if (window.MathJax) {
+          MathJax.typesetPromise();
+        }
+      });
+    </script>
   </body>
-
 </html>

@@ -8,10 +8,20 @@
 
   <title>KMP算法</title>
   <meta name="description" content="MKP算法简介  KMP是解决一个给定模式串S1是否为s2字串的问题的算法。  Knuth-Morris-Pratt 字符串查找算法，简称为 “KMP 算法”，常用于在一个文本串 S 内查找一个模式串 P 的出现位置，这个算法由Donald Knuth、Vaughan Pratt、James H. Morris ...">
-
   <link rel="stylesheet" href="/Leetto/css/main.css">
   <link rel="canonical" href="http://Leetto-o.github.io/Leetto/algorithm/2025/03/23/KMP%E7%AE%97%E6%B3%95.html">
   <link rel="alternate" type="application/rss+xml" title="LeeNote" href="http://Leetto-o.github.io/Leetto/feed.xml">
+  <script>
+    MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\$', '\$']],
+        displayMath: [['$$', '$$'], ['\$$', '\$$']],
+        processEscapes: true
+      }
+    };
+  </script>
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
 </head>
 
 
@@ -185,7 +195,12 @@ A hub for all things programming, algorithms, computer science, and math. Here, 
 
 </footer>
 
-
+    <script>
+      document.addEventListener('DOMContentLoaded', function() {
+        if (window.MathJax) {
+          MathJax.typesetPromise();
+        }
+      });
+    </script>
   </body>
-
 </html>

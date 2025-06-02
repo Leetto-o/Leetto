@@ -8,10 +8,20 @@
 
   <title>排序算法总结</title>
   <meta name="description" content="排序算法总结排序算法复杂度分析选择排序-直接选择排序(Selection Sort)  每一次从待排序的数据元素中选出最小（或最大）的一个元素，存放在序列的起始位置，直到全部待排序的 数据元素排完 。  找出序列中的最小关键字，然后将这个元素与序列首端元素交换位置。例如，序列前i个元素已经有序，从第i+1到第n个...">
-
   <link rel="stylesheet" href="/Leetto/css/main.css">
   <link rel="canonical" href="http://Leetto-o.github.io/Leetto/algorithm/2025/03/24/%E6%8E%92%E5%BA%8F%E7%AE%97%E6%B3%95%E6%80%BB%E7%BB%93.html">
   <link rel="alternate" type="application/rss+xml" title="LeeNote" href="http://Leetto-o.github.io/Leetto/feed.xml">
+  <script>
+    MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\$', '\$']],
+        displayMath: [['$$', '$$'], ['\$$', '\$$']],
+        processEscapes: true
+      }
+    };
+  </script>
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
 </head>
 
 
@@ -737,7 +747,12 @@ A hub for all things programming, algorithms, computer science, and math. Here, 
 
 </footer>
 
-
+    <script>
+      document.addEventListener('DOMContentLoaded', function() {
+        if (window.MathJax) {
+          MathJax.typesetPromise();
+        }
+      });
+    </script>
   </body>
-
 </html>

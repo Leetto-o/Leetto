@@ -17,4 +17,6 @@ github_username: Leetto-o
 
 # Build settings
 markdown: kramdown
+kramdown:
+  math_engine: disabled     # 完全禁用 kramdown 的数学处理
 theme: jekyll-theme-cayman

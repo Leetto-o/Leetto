@@ -8,10 +8,20 @@
 
   <title>CPP未来体</title>
   <meta name="description" content="CPP未来体  总体来说，std::async 接口最简单，做的事情最多，抽象程度最高；std::packaged_task，抽象程度次之，需要额外的操作但却比较灵活；std::promise 功能最为单一，是三者中抽象程度最低的。    async函数    使用 std::async 启动一个异步任务，std...">
-
   <link rel="stylesheet" href="/Leetto/css/main.css">
   <link rel="canonical" href="http://Leetto-o.github.io/Leetto/cpp/2025/04/04/CPP%E6%9C%AA%E6%9D%A5%E4%BD%93.html">
   <link rel="alternate" type="application/rss+xml" title="LeeNote" href="http://Leetto-o.github.io/Leetto/feed.xml">
+  <script>
+    MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\$', '\$']],
+        displayMath: [['$$', '$$'], ['\$$', '\$$']],
+        processEscapes: true
+      }
+    };
+  </script>
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
 </head>
 
 
@@ -219,7 +229,12 @@ A hub for all things programming, algorithms, computer science, and math. Here, 
 
 </footer>
 
-
+    <script>
+      document.addEventListener('DOMContentLoaded', function() {
+        if (window.MathJax) {
+          MathJax.typesetPromise();
+        }
+      });
+    </script>
   </body>
-
 </html>

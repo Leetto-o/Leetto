@@ -10,10 +10,20 @@
   <meta name="description" content="Welcome to LeeNote! 
 A hub for all things programming, algorithms, computer science, and math. Here, I document my learning journey, share insights, and break down complex concepts. Dive in, explore, and let’s geek out together!
 ">
-
   <link rel="stylesheet" href="/Leetto/css/main.css">
   <link rel="canonical" href="http://Leetto-o.github.io/Leetto/">
   <link rel="alternate" type="application/rss+xml" title="LeeNote" href="http://Leetto-o.github.io/Leetto/feed.xml">
+  <script>
+    MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\$', '\$']],
+        displayMath: [['$$', '$$'], ['\$$', '\$$']],
+        processEscapes: true
+      }
+    };
+  </script>
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
 </head>
 
 
@@ -112,8 +122,25 @@ A hub for all things programming, algorithms, computer science, and math. Here, 
     
   </ul>
   
+  <h2>Math</h2>
+  <ul>
+    
+      <li>
+        <a href="/Leetto/math/2025/05/30/%E9%AB%98%E7%AD%89%E4%BB%A3%E6%95%B0.html">高等代数</a>
+      </li>
+    
+  </ul>
+  
 
   <!-- <ul class="post-list">
+    
+      <li>
+        <span class="post-meta">May 30, 2025</span>
+
+        <h2>
+          <a class="post-link" href="/Leetto/math/2025/05/30/%E9%AB%98%E7%AD%89%E4%BB%A3%E6%95%B0.html">高等代数</a>
+        </h2>
+      </li>
     
       <li>
         <span class="post-meta">Apr 4, 2025</span>
@@ -235,7 +262,12 @@ A hub for all things programming, algorithms, computer science, and math. Here, 
 
 </footer>
 
-
+    <script>
+      document.addEventListener('DOMContentLoaded', function() {
+        if (window.MathJax) {
+          MathJax.typesetPromise();
+        }
+      });
+    </script>
   </body>
-
 </html>
