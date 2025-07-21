@@ -108,6 +108,19 @@ $$
 ## 拉普拉斯定理
 - n阶矩阵A取第i<sub>1</sub>,...,i<sub>k</sub>行，第j<sub>1</sub>,...,i<sub>k</sub>列，|A|等于k行形成的所有k阶子式与代数余子式的乘积之和  
 
+## 矩阵的秩
+- 数域K上S×N矩阵A的列向量组成的向量组称为A的**列向量组**，同理，行向量组成的向量组称为矩阵A的**行向量组**
+- 列向量组的秩称为矩阵的**列秩**，同理，行向量组的秩称为**行秩**
+- 数域K上S×N阶梯形矩阵J的列秩=矩阵的行秩=J的非0行的个数
+- 矩阵的**初等行变换**与**初等列变换**不改变矩阵的**行秩**
+- 矩阵的**初等行变换**与**初等列变换**不改变矩阵的列向量组的线性相关性，也不改变**列秩**
+- 任何一个矩阵A的**行秩=列秩**，矩阵J是由A通过初等行变换得到的阶梯型矩阵，在**A的行秩=A的列秩=J的行秩=J的列秩**
+- 设矩阵J是由A通过初等行变换得到的阶梯型矩阵，则rank(A)=J的非0行的个数r，并且若J的主元在第j<sub>1</sub>,...,i<sub>r</sub>列，则A的第j<sub>1</sub>,...,i<sub>r</sub>列构成的列向量组是一个**极大线性无关组**
+- 定义矩阵A的行秩与列秩统称为A的秩，记为rank(A)
+- rank(A)=rank(A<sup>T</sup>)
+- S×N非零矩阵A的秩等于A的不为零子式的最高阶数
+- n阶矩阵A，rank(A)=n，则称A为满秩矩阵<=>|A|≠0
+
 # 线性空间
 ## 前提
 ### 数域
@@ -145,26 +158,33 @@ $$
   - α∈U,k∈K，则k·α∈U（U对V的数乘封闭）
 
 ## 生成子空间
-- 令W={k<sub>1</sub>α<sub>1</sub>+...+k<sub>s</sub>α<sub>s</sub>|k<sub>1</sub>...k<sub>s</sub>∈K}成为向量组α<sub>1</sub>...α<sub>s</sub>的一个线性组合
-- 易证W对于V的加法和数乘封闭，因此W是V的一个子空间，称W是由向量组α<sub>1</sub>...α<sub>s</sub>生成的子空间，记作<α<sub>1</sub>...α<sub>s</sub>>或*L*(α<sub>1</sub>...α<sub>s</sub>)
-- 对于β∈<α<sub>1</sub>...α<sub>s</sub>>,存在数域K中的一组数，使得β=l<sub>1</sub>α<sub>1</sub>+...+l<sub>s</sub>α<sub>s</sub>，则称β可以由向量组α<sub>1</sub>...α<sub>s</sub>线性表出
-- 当且仅当β可以由列向量组α<sub>1</sub>...α<sub>n</sub>线性表出
+- 令W={k<sub>1</sub>α<sub>1</sub>+...+k<sub>s</sub>α<sub>s</sub>|k<sub>1</sub>,...,k<sub>s</sub>∈K}成为向量组α<sub>1</sub>,...,α<sub>s</sub>的一个线性组合
+- 易证W对于V的加法和数乘封闭，因此W是V的一个子空间，称W是由向量组α<sub>1</sub>,...,α<sub>s</sub>生成的子空间，记作<α<sub>1</sub>,...,α<sub>s</sub>>或*L*(α<sub>1</sub>,...,α<sub>s</sub>)
+- 对于β∈<α<sub>1</sub>,...,α<sub>s</sub>>,存在数域K中的一组数，使得β=l<sub>1</sub>α<sub>1</sub>+...+l<sub>s</sub>α<sub>s</sub>，则称β可以由向量组α<sub>1</sub>,...,α<sub>s</sub>线性表出
+- 当且仅当β可以由列向量组α<sub>1</sub>,...,α<sub>n</sub>线性表出
 - 当且仅当对应的方程组有解
+
+## 子空间的运算
+- 设V<sub>1</sub>,V<sub>2</sub>都是V的子空间，则V<sub>1</sub>∩V<sub>2</sub>也是V的子空间，(V<sub>1</sub>∩V<sub>2</sub>)∩V<sub>3</sub> = V<sub>1</sub>∩(V<sub>2</sub>∩V<sub>3</sub>)，满足交换律，V<sub>1</sub>∩...∩V<sub>n</sub>也是V的子空间
+- 设V<sub>1</sub>,V<sub>2</sub>都是V的子空间，V<sub>1</sub>+V<sub>2</sub>:={α<sub>1</sub>+α<sub>2</sub>|α<sub>1</sub>∈V<sub>1</sub>,α<sub>2</sub>∈V<sub>2</sub>}也是V的子空间，设V<sub>1</sub>+V<sub>2</sub>称为子空间设V<sub>1</sub>,V<sub>2</sub>的**和**，V<sub>1</sub>+...+V<sub>n</sub>也是V的子空间
+- <α<sub>1</sub>,...,α<sub>s</sub>>+<<α<sub>1</sub>,...,α<sub>s</sub>>> = <α<sub>1</sub>,...,α<sub>s</sub>,β<sub>1</sub>,...,β<sub>s</sub>>
+- 设V<sub>1</sub>,V<sub>2</sub>都是V**有限**的子空间，则dim(V<sub>1</sub>+V<sub>2</sub>)=dim(V<sub>1</sub>)+dim(V<sub>2</sub>)-dim(V<sub>1</sub>∩V<sub>2</sub>),从而dim(V<sub>1</sub>+V<sub>2</sub>)=dim(V<sub>1</sub>)+dim(V<sub>2</sub>)<=>dim(V<sub>1</sub>∩V<sub>2</sub>)=0
+- 设V<sub>1</sub>,V<sub>2</sub>都是V的子空间，如果V<sub>1</sub>+V<sub>2</sub>中的每一个向量α都可以表示成α=α<sub>1</sub>+α<sub>2</sub>，α<sub>1</sub>∈V<sub>1</sub>,α<sub>2</sub>∈V<sub>2</sub>，且表法唯一，则称和V<sub>1</sub>+V<sub>2</sub>是**直和**
 
 # 线性相关
 - 设V是数域K上的一个线性空间，V中的一个向量组α<sub>1</sub>...α<sub>s</sub>，如果有K中不全为0的数k<sub>1</sub>...k<sub>s</sub>，使得k<sub>1</sub>α<sub>1</sub>+...+k<sub>s</sub>α<sub>s</sub>=***0***，则称**向量组线性相关**
 - 即如果从k<sub>1</sub>α<sub>1</sub>+...+k<sub>s</sub>α<sub>s</sub>=***0***可以推出k<sub>1</sub>=...=k<sub>s</sub>=0，那么称**向量组线性无关**
-- K<sup>S</sup>中列向量组α<sub>1</sub>...α<sub>n</sub>线性相关，则K中不全为0的数c<sub>1</sub>...c<sub>n</sub>，使得c<sub>1</sub>α<sub>1</sub>+...+c<sub>n</sub>α<sub>n</sub>=***0***
+- K<sup>S</sup>中列向量组α<sub>1</sub>,...,α<sub>n</sub>线性相关，则K中不全为0的数c<sub>1</sub>,...,c<sub>n</sub>，使得c<sub>1</sub>α<sub>1</sub>+...+c<sub>n</sub>α<sub>n</sub>=***0***
 - 则K上n元齐次方程组X<sub>1</sub>α<sub>1</sub>+...+X<sub>n</sub>α<sub>n</sub>=***0***，**有非零解**；如果线性无关，则方程组**只有0解**
-- K<sup>S</sup>中列向量组α<sub>1</sub>...α<sub>n</sub>线性相关，以α<sub>1</sub>...α<sub>n</sub>为列向量的矩阵A的行列式为0
+- K<sup>S</sup>中列向量组α<sub>1</sub>,...,α<sub>n</sub>线性相关，以α<sub>1</sub>,...,α<sub>n</sub>为列向量的矩阵A的行列式为0
 
 ## 线性相关性质
 1. ***0***向量线性相关，非零向量线性无关
 2. 向量组有一**部分线性相关**，那么向量组线性相关；如果向量组线性无关，那么向量组任意部分都**线性无关**
 3. 含有***0***向量的向量组一定线性相关
 4. 向量组线性相关，则其中至少有1个向量可由其他向量**线性表出**；如果向量组线性无关，则每一个向量都不能由其他向量线性表出
- - 如果向量组α<sub>1</sub>...α<sub>s</sub>线性无关，充分必要条件是向量β可以由向量组线性表出，且**表出方式唯一**
- - 如果向量组α<sub>1</sub>...α<sub>s</sub>线性无关,向量组α<sub>1</sub>...α<sub>s</sub>,β线性相关，那么β可以由向量组线性表出
+ - 如果向量组α<sub>1</sub>,...,α<sub>s</sub>线性无关<=>向量β可以由向量组线性表出，且**表出方式唯一**
+ - 如果向量组α<sub>1</sub>,...,α<sub>s</sub>线性无关,向量组α<sub>1</sub>,...,α<sub>s</sub>,β线性相关，那么β可以由向量组线性表出
 
 ## 极大线性无关组
 ### 定义
@@ -173,22 +193,87 @@ $$
 - 从向量组的其余向量中任意取一个加入这个部分组，得到新的部分组是线性相关的
 
 ### 性质
-- 设向量组α<sub>1</sub>...α<sub>s</sub>的一个极大线性无关组为α<sub>1</sub>...α<sub>m</sub>(M<S)
-  - 极大线性无关组中每一个向量都可以由向量组α<sub>1</sub>...α<sub>s</sub>线性表出
-  - 向量组α<sub>1</sub>...α<sub>s</sub>中每一个向量都可以由极大线性无关组线性表出
-- 如果向量组α<sub>1</sub>...α<sub>s</sub>中每一个向量都可以由向量组β<sub>1</sub>...β<sub>r</sub>线性表出，则称向量组α<sub>1</sub>...α<sub>s</sub>可有向量组β<sub>1</sub>...β<sub>r</sub>线性表出
-- 如果两个向量组可以互相线性表出，则称两个向量组**等价**，记为{α<sub>1</sub>...α<sub>s</sub>}≌{β<sub>1</sub>...β<sub>r</sub>}
+- 设向量组α<sub>1</sub>,...,α<sub>s</sub>的一个极大线性无关组为α<sub>1</sub>,...,α<sub>m</sub>(M<S)
+  - 极大线性无关组中每一个向量都可以由向量组α<sub>1</sub>,...,α<sub>s</sub>线性表出
+  - 向量组α<sub>1</sub>,...,α<sub>s</sub>中每一个向量都可以由极大线性无关组线性表出
+- 如果向量组α<sub>1</sub>,...,α<sub>s</sub>中每一个向量都可以由向量组β<sub>1</sub>,...,β<sub>r</sub>线性表出，则称向量组α<sub>1</sub>,...,α<sub>s</sub>可有向量组β<sub>1</sub>,...,β<sub>r</sub>线性表出
+- 如果两个向量组可以互相线性表出，则称两个向量组**等价**，记为{α<sub>1</sub>,...,α<sub>s</sub>}≌{β<sub>1</sub>,...,β<sub>r</sub>}
   - 向量组与它的任意一个极大线性无关组**等价**
   - 每一个向量组与其自身等价
-  - 若{α<sub>1</sub>...α<sub>s</sub>}≌{β<sub>1</sub>...β<sub>r</sub>}，则{β<sub>1</sub>...β<sub>r</sub>}≌{α<sub>1</sub>...α<sub>s</sub>}（**对称性**）
-  - 若{{α<sub>1</sub>...α<sub>s</sub>}}≌{β<sub>1</sub>...β<sub>r</sub>}，且{β<sub>1</sub>...β<sub>r</sub>}≌{γ<sub>1</sub>...γ<sub>t</sub>}，则{α<sub>1</sub>...α<sub>s</sub>}≌{γ<sub>1</sub>...γ<sub>t</sub>}（**传递性**）
-  - 如果向量组α<sub>1</sub>...α<sub>s</sub>可以由{β<sub>1</sub>...β<sub>r</sub>}线性表出，且s>r，则{α<sub>1</sub>...α<sub>s</sub>}一定线性相关
-  - 如果α<sub>1</sub>...α<sub>s</sub>可以由{β<sub>1</sub>...β<sub>r</sub>}线性表出，且{α<sub>1</sub>...α<sub>s</sub>}线性无关，则s≤r
-  - 等价的两个向量组所含向量的个数一定**相等**
+  - 若{α<sub>1</sub>,...,α<sub>s</sub>}≌{β<sub>1</sub>,...,β<sub>r</sub>}，则{β<sub>1</sub>,...,β<sub>r</sub>}≌{α<sub>1</sub>,...,α<sub>s</sub>}（**对称性**）
+  - 若{{α<sub>1</sub>,...,α<sub>s</sub>}}≌{β<sub>1</sub>,...,β<sub>r</sub>}，且{β<sub>1</sub>,...,β<sub>r</sub>}≌{γ<sub>1</sub>,...,γ<sub>t</sub>}，则{α<sub>1</sub>,...,α<sub>s</sub>}≌{γ<sub>1</sub>,...,γ<sub>t</sub>}（**传递性**）
+  - 如果向量组α<sub>1</sub>,...,α<sub>s</sub>可以由{β<sub>1</sub>,...,β<sub>r</sub>}线性表出，且s>r，则{α<sub>1</sub>,...,α<sub>s</sub>}一定线性相关
+  - 如果α<sub>1</sub>,...,α<sub>s</sub>可以由{β<sub>1</sub>,...,β<sub>r</sub>}线性表出，且{α<sub>1</sub>,...,α<sub>s</sub>}线性无关，则s≤r
+  - **等价的、线性无关**的两个向量组所含向量的个数一定**相等**
 
 ### 向量组的秩（Rank）
-向量组α<sub>1</sub>...α<sub>s</sub>任意两个极大线性无关组所含向量的个数**相等**，不与极大线性无关组的选取相关
+向量组α<sub>1</sub>,...,α<sub>s</sub>任意两个极大线性无关组所含向量的个数**相等**，不与极大线性无关组的选取相关
 #### 定义
-向量组α<sub>1</sub>...α<sub>s</sub>的任意一个极大线性无关组向量的个数成为向量组的**秩**
+向量组α<sub>1</sub>,...,α<sub>s</sub>的任意一个极大线性无关组向量的个数成为向量组的**秩**
 #### 性质
-- 向量组α<sub>1</sub>...α<sub>s</sub>线性无关，则Rank{α<sub>1</sub>...α<sub>s</sub>}=s
+- 向量组α<sub>1</sub>,...,α<sub>s</sub>线性无关，则Rank{α<sub>1</sub>,...,α<sub>s</sub>}=s
+- 如果向量组A可以由向量组B线性表出，则Rank(A)≤Rank(B)
+- **等价**的向量组的秩相同
+
+## 线性空间子集线性相关性
+- 有限子集：设V是数域K上的线性空间，V的一个有限子集{α<sub>1</sub>,...,α<sub>s</sub>}线性相关<=>向量组α<sub>1</sub>,...,α<sub>s</sub>线性相关
+- 无限子集：V的一个无限子集S线性相关<=>S有一个有限子集线性相关
+
+# 线性空间的基
+## 定义
+- 设V是数域K上的线性空间，对于V的一个子集S，满足以下条件，则称S是V的一个**基**
+  - S是线性无关的
+  - V中任一向量可以由S中的有限多个向量线性表出
+- 若S={α<sub>1</sub>,...,α<sub>s</sub>}，则向量组α<sub>1</sub>,...,α<sub>s</sub>是V的一个有序基  
+{***0***}零向量的基是空集（认为空集线性无关）  
+- 任何一个数域上的任一线性空间都有一个基
+- 若V有一个基是有限子集，则称V是**有限维**的；若V有一个基是无限子集，则称V是**无限维**的
+- 若V是有限维的，则称V的任意两个基所含的向量个数**相等**
+- 若V是无限维的，则V的任何一个基都是无限维的
+- 如果dim V=n，则V中任意n线性无关的向量都是V一个基
+- 设dim V=n，若V中每一个向量可以由α<sub>1</sub>,...,α<sub>n</sub>线性表出，则α<sub>1</sub>,...,α<sub>n</sub>是V的一个基
+- 设dim V=n，则V中任意一个线性无关的向量组都可以扩充成V的一个基
+- 设dim V=n，W是V的一个子空间，则dim W≤dim V
+- 设V是数域K上的线性空间，对于V的一个子集S，满足以下条件，则称S是V的一个**极大线性无关集**
+  - S是线性无关的
+  - 对于β不属于S，有S∪{β}线性相关
+- S是V的一个基<=>S是V（当V≠{***0***}时）的一个极大线性无关集
+- 子空间<α<sub>1</sub>,...,α<sub>s</sub>>:={k<sub>1</sub>α<sub>1</sub>+...+k<sub>s</sub>α<sub>s</sub>|k<sub>1</sub>,...,k<sub>s</sub>∈K},则向量组α<sub>1</sub>,...,α<sub>s</sub>的一个极大线性无关组是子空间的一个基，即dim<α<sub>1</sub>,...,α<sub>s</sub>>=rank{α<sub>1</sub>,...,α<sub>s</sub>}
+- 子空间<α<sub>1</sub>,...,α<sub>s</sub>>=<β<sub>1</sub>,...,β<sub>r</sub>><=>{α<sub>1</sub>,...,α<sub>s</sub>}≌{β<sub>1</sub>,...,β<sub>r</sub>}
+
+## 维度定义
+- 若V是有限维的，则称V的一个基所含向量的个数称为V的维度，记为dim<sub>k</sub> V或dim V
+- 若V是无限维的，则称V的维度记为dim V=∞
+- {***0***}的维数为0
+- 设dim V=n，则V中任意n+1个向量一定线性相关
+
+## 坐标定义
+- 设dim V=n，取V的一个基α<sub>1</sub>,...,α<sub>n</sub>，则V中任一向量α=a<sub>1</sub>·α<sub>1</sub>+...+a<sub>n</sub>·α<sub>n</sub>，且表达方式唯一，则把(a<sub>1</sub>, ... ,a<sub>n</sub>)<sup>T</sup>称为向量α在基α<sub>1</sub>,...,α<sub>n</sub>下的**坐标**
+
+# 线性方程组
+## 判别定理
+- 数域K上n元线性方程组x<sub>1</sub>·α<sub>1</sub>+...+x<sub>n</sub>·α<sub>n</sub>=β有解  
+<=>β∈子空间<α<sub>1</sub>,...,α<sub>n</sub>>  
+<=><α<sub>1</sub>,...,α<sub>n</sub>,β>=<α<sub>1</sub>,...,α<sub>n</sub>>  
+<=>dim<α<sub>1</sub>,...,α<sub>n</sub>,β>=dim<α<sub>1</sub>,...,α<sub>n</sub>>  
+<=>rank({α<sub>1</sub>,...,α<sub>n</sub>,β})=rank({α<sub>1</sub>,...,α<sub>n</sub>})
+- 当rank({α<sub>1</sub>,...,α<sub>n</sub>,β})=rank({α<sub>1</sub>,...,α<sub>n</sub>})=n时，有**唯一解**
+- 当rank({α<sub>1</sub>,...,α<sub>n</sub>,β})=rank({α<sub>1</sub>,...,α<sub>n</sub>})<n时，有**无穷多解**
+
+## 齐次线性方程组的解
+### 解空间
+数域K上的n元齐次线性方程组x<sub>1</sub>·α<sub>1</sub>+...+x<sub>n</sub>·α<sub>n</sub>=***0***
+- 假设有非0解，且解集记为W，若η，δ∈W，则η+δ∈W
+- 若η∈W，k∈K，则k·η∈W
+- 解集W是K<sup>n</sup>的子空间，称W为齐次线性方程组的解空间
+
+### 基础解系
+- 数域K上n元齐次线性方程组有非0解时，解空间W的维数dimW=n-rank(A),把W的一个基成为齐次线性方程组的**基础解系**
+- 设η<sub>1</sub>,...,η<sub>n-r</sub>是齐次线性方程组的一个解系，则方程组全部的解为k<sub>1</sub>·η<sub>1</sub>+...+k<sub>n-r</sub>·η<sub>n-r</sub>，其中k<sub>1</sub>,...,k<sub>n-r</sub>∈K
+
+## 非齐次线性方程组的解
+数域K上的n元非齐次线性方程组x<sub>1</sub>·α<sub>1</sub>+...+x<sub>n</sub>·α<sub>n</sub>=β，记解集为U，相应的齐次线性方程组的解集为W
+- 若γ，δ∈U，则γ-δ∈W
+- 若γ∈U，η∈W，则γ+η∈U
+- 设γ<sub>0</sub>∈U，称γ<sub>0</sub>是非齐次线性方程组的一个特解，W是对应齐次方程组的一个解空间，则n元非齐次线性方程组的解U=γ<sub>0</sub>+W，γ<sub>0</sub>+W称为W型的一个线性流形，或称为W的一个陪基
+- 设W的一个基为η<sub>1</sub>,...,η<sub>n-r</sub>，则非齐次线性方程组的全部解为k<sub>1</sub>·η<sub>1</sub>+...+k<sub>n-r</sub>·η<sub>n-r</sub>+γ<sub>0</sub>，其中γ<sub>0</sub>是非齐次线性方程组的一个特解

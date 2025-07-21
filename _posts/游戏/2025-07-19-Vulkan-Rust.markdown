@@ -1,0 +1,253 @@
+---
+layout: post
+title: "Vulkan学习笔记"
+data: 2025-07-05 00:00:00 +0800
+categories: [Game]
+---
+# Vulkan（Rust glfw0.59 + ash库0.38）
+## 创建窗口
+- 创建**glfw实例**，glfw::init
+- 创建**window**，glfw_instance.create_window
+## 创建Instance
+- 加载Vulkan函数，ash使用**ash::Entry**作为函数的进入点
+- 创建**Instance**
+  - 创建**Validation layer**（VK_LAYER_KHRONOS_validation），从Entry中获取enumerate_instance_layer_properties，返回有效层，判读是否有效层是否包含了Validation layer
+  - 创建**ash::vk::ApplicationInfo**
+  - 创建window要求的**扩展**(包括"VK_KHR_surface"、"VK_KHR_win32_surface"、"VK_EXT_debug_utils")，可以使用ash_window::enumerate_required_extensions
+  - 创建**ash::vk::DebugUtilsMessengerCreateInfoEXT**
+  - 根据Validation layer、ApplicationInfo、extensions、DebugUtilsMessengerCreateInfoEXT创建**ash::vk::InstanceCreateInfo**
+  - Entry创建**Instance**，entry.create_instance
+## 配置Debug Messenger
+- 创建**ash::vk::DebugUtilsMessengerCreateInfoEXT**
+- 创建**ash::ext::debug_utils::Instance**
+- 创建**debug_utils_messenger**，debug_utils.create_debug_utils_messenger
+## 创建Surface
+## 选择物理设备
+- instance获取所有的**physical device**，instance.enumerate_physical_devices().unwrap()
+- 检查physical device是不是满足需要的条件
+  - 获取设备的****properties**，instance.get_physical_device_properties
+    - api_version: u32
+    - driver_version: u32
+    - vendor_id: u32
+    - device_id: u32
+    - device_type：PhysicalDeviceType(INTEGRATED_GPU、DISCRETE_GPU、VIRTUAL_GPU、CPU、OTHER)
+    - device_name: [c_char; MAX_PHYSICAL_DEVICE_NAME_SIZE]
+    - pipeline_cache_uuid: [u8; UUID_SIZE]
+    - limits: PhysicalDeviceLimits
+      - max_image_dimension1_d: u32,
+      - max_image_dimension2_d: u32,
+      - max_image_dimension3_d: u32,
+      - max_image_dimension_cube: u32,
+      - max_image_array_layers: u32,
+      - max_texel_buffer_elements: u32,
+      - max_uniform_buffer_range: u32,
+      - max_storage_buffer_range: u32,
+      - max_push_constants_size: u32,
+      - max_memory_allocation_count: u32,
+      - max_sampler_allocation_count: u32,
+      - buffer_image_granularity: DeviceSize,
+      - sparse_address_space_size: DeviceSize,
+      - max_bound_descriptor_sets: u32,
+      - max_per_stage_descriptor_samplers: u32,
+      - max_per_stage_descriptor_uniform_buffers: u32,
+      - max_per_stage_descriptor_storage_buffers: u32,
+      - max_per_stage_descriptor_sampled_images: u32,
+      - max_per_stage_descriptor_storage_images: u32,
+      - max_per_stage_descriptor_input_attachments: u32,
+      - max_per_stage_resources: u32,
+      - max_descriptor_set_samplers: u32,
+      - max_descriptor_set_uniform_buffers: u32,
+      - max_descriptor_set_uniform_buffers_dynamic: u32,
+      - max_descriptor_set_storage_buffers: u32,
+      - max_descriptor_set_storage_buffers_dynamic: u32,
+      - max_descriptor_set_sampled_images: u32,
+      - max_descriptor_set_storage_images: u32,
+      - max_descriptor_set_input_attachments: u32,
+      - max_vertex_input_attributes: u32,
+      - max_vertex_input_bindings: u32,
+      - max_vertex_input_attribute_offset: u32,
+      - max_vertex_input_binding_stride: u32,
+      - max_vertex_output_components: u32,
+      - max_tessellation_generation_level: u32,
+      - max_tessellation_patch_size: u32,
+      - max_tessellation_control_per_vertex_input_components: u32,
+      - max_tessellation_control_per_vertex_output_components: u32,
+      - max_tessellation_control_per_patch_output_components: u32,
+      - max_tessellation_control_total_output_components: u32,
+      - max_tessellation_evaluation_input_components: u32,
+      - max_tessellation_evaluation_output_components: u32,
+      - max_geometry_shader_invocations: u32,
+      - max_geometry_input_components: u32,
+      - max_geometry_output_components: u32,
+      - max_geometry_output_vertices: u32,
+      - max_geometry_total_output_components: u32,
+      - max_fragment_input_components: u32,
+      - max_fragment_output_attachments: u32,
+      - max_fragment_dual_src_attachments: u32,
+      - max_fragment_combined_output_resources: u32,
+      - max_compute_shared_memory_size: u32,
+      - max_compute_work_group_count: [u32; 3],
+      - max_compute_work_group_invocations: u32,
+      - max_compute_work_group_size: [u32; 3],
+      - sub_pixel_precision_bits: u32,
+      - sub_texel_precision_bits: u32,
+      - mipmap_precision_bits: u32,
+      - max_draw_indexed_index_value: u32,
+      - max_draw_indirect_count: u32,
+      - max_sampler_lod_bias: f32,
+      - max_sampler_anisotropy: f32,
+      - max_viewports: u32,
+      - max_viewport_dimensions: [u32; 2],
+      - viewport_bounds_range: [f32; 2],
+      - viewport_sub_pixel_bits: u32,
+      - min_memory_map_alignment: usize,
+      - min_texel_buffer_offset_alignment: DeviceSize,
+      - min_uniform_buffer_offset_alignment: DeviceSize,
+      - min_storage_buffer_offset_alignment: DeviceSize,
+      - min_texel_offset: i32,
+      - max_texel_offset: u32,
+      - min_texel_gather_offset: i32,
+      - max_texel_gather_offset: u32,
+      - min_interpolation_offset: f32,
+      - max_interpolation_offset: f32,
+      - sub_pixel_interpolation_offset_bits: u32,
+      - max_framebuffer_width: u32,
+      - max_framebuffer_height: u32,
+      - max_framebuffer_layers: u32,
+      - framebuffer_color_sample_counts: SampleCountFlags,
+      - framebuffer_depth_sample_counts: SampleCountFlags,
+      - framebuffer_stencil_sample_counts: SampleCountFlags,
+      - framebuffer_no_attachments_sample_counts: SampleCountFlags,
+      - max_color_attachments: u32,
+      - sampled_image_color_sample_counts: SampleCountFlags,
+      - sampled_image_integer_sample_counts: SampleCountFlags,
+      - sampled_image_depth_sample_counts: SampleCountFlags,
+      - sampled_image_stencil_sample_counts: SampleCountFlags,
+      - storage_image_sample_counts: SampleCountFlags,
+      - max_sample_mask_words: u32,
+      - timestamp_compute_and_graphics: Bool32,
+      - timestamp_period: f32,
+      - max_clip_distances: u32,
+      - max_cull_distances: u32,
+      - max_combined_clip_and_cull_distances: u32,
+      - discrete_queue_priorities: u32,
+      - point_size_range: [f32; 2],
+      - line_width_range: [f32; 2],
+      - point_size_granularity: f32,
+      - line_width_granularity: f32,
+      - strict_lines: Bool32,
+      - standard_sample_locations: Bool32,
+      - optimal_buffer_copy_offset_alignment: DeviceSize,
+      - optimal_buffer_copy_row_pitch_alignment: DeviceSize,
+      - non_coherent_atom_size: DeviceSize,
+    - sparse_properties: PhysicalDeviceSparseProperties
+      - residency_standard2_d_block_shape: Bool32,
+      - residency_standard2_d_multisample_block_shape: Bool32,
+      - residency_standard3_d_block_shape: Bool32,
+      - residency_aligned_mip_size: Bool32,
+      - residency_non_resident_strict: Bool32,
+  - 获取设备的**features**，instance.get_physical_device_features
+    - robust_buffer_access: Bool32,
+    - full_draw_index_uint32: Bool32,
+    - image_cube_array: Bool32,
+    - independent_blend: Bool32,
+    - geometry_shader: Bool32,
+    - tessellation_shader: Bool32,
+    - sample_rate_shading: Bool32,
+    - dual_src_blend: Bool32,
+    - logic_op: Bool32,
+    - multi_draw_indirect: Bool32,
+    - draw_indirect_first_instance: Bool32,
+    - depth_clamp: Bool32,
+    - depth_bias_clamp: Bool32,
+    - fill_mode_non_solid: Bool32,
+    - depth_bounds: Bool32,
+    - wide_lines: Bool32,
+    - large_points: Bool32,
+    - alpha_to_one: Bool32,
+    - multi_viewport: Bool32,
+    - sampler_anisotropy: Bool32,
+    - texture_compression_etc2: Bool32,
+    - texture_compression_astc_ldr: Bool32,
+    - texture_compression_bc: Bool32,
+    - occlusion_query_precise: Bool32,
+    - pipeline_statistics_query: Bool32,
+    - vertex_pipeline_stores_and_atomics: Bool32,
+    - fragment_stores_and_atomics: Bool32,
+    - shader_tessellation_and_geometry_point_size: Bool32,
+    - shader_image_gather_extended: Bool32,
+    - shader_storage_image_extended_formats: Bool32,
+    - shader_storage_image_multisample: Bool32,
+    - shader_storage_image_read_without_format: Bool32,
+    - shader_storage_image_write_without_format: Bool32,
+    - shader_uniform_buffer_array_dynamic_indexing: Bool32,
+    - shader_sampled_image_array_dynamic_indexing: Bool32,
+    - shader_storage_buffer_array_dynamic_indexing: Bool32,
+    - shader_storage_image_array_dynamic_indexing: Bool32,
+    - shader_clip_distance: Bool32,
+    - shader_cull_distance: Bool32,
+    - shader_float64: Bool32,
+    - shader_int64: Bool32,
+    - shader_int16: Bool32,
+    - shader_resource_residency: Bool32,
+    - shader_resource_min_lod: Bool32,
+    - sparse_binding: Bool32,
+    - sparse_residency_buffer: Bool32,
+    - sparse_residency_image2_d: Bool32,
+    - sparse_residency_image3_d: Bool32,
+    - sparse_residency2_samples: Bool32,
+    - sparse_residency4_samples: Bool32,
+    - sparse_residency8_samples: Bool32,
+    - sparse_residency16_samples: Bool32,
+    - sparse_residency_aliased: Bool32,
+    - variable_multisample_rate: Bool32,
+    - inherited_queries: Bool32
+  - 选择合适的**properties**和**feature**
+  - 选择**队列族**(Queue Family)
+    - 先选择**grapyics queue family**，通过instance.get_physical_device_queue_family_properties(physical_device)，获取QueueFamilyProperties，QueueFamilyProperties包括
+      - queue_flags: QueueFlags
+        - #[doc = "Queue supports graphics operations"]  
+          - const GRAPHICS
+        - #[doc = "Queue supports compute operations"]  
+          - const COMPUTE: Self = Self(0b10);
+        - #[doc = "Queue supports transfer operations"]  
+          - const TRANSFER
+        - #[doc = "Queue supports sparse resource memory management operations"]  
+          - const SPARSE_BINDING
+      - queue_count: u32,
+      - timestamp_valid_bits: u32,
+      -min_image_transfer_granularity: Extent3D
+    - 在选在**present queue family**，通过ash::khr::surface::Instance::get_physical_device_surface_support获取是否有present queue
+## 创建逻辑设备
+- 根据创建的物理设备，获取所需要的**graphics queue family**和**present queue family**的index
+- 创建ash::vk::DeviceQueueCreateInfo（Vec）
+- 创建ash::vk::PhysicalDeviceFeatures
+- 创建逻辑设备**扩展**，包括ash::khr::swapchain
+- 创建ash::vk::DeviceCreateInfo
+- 创建**逻辑设备**，instance.create_device
+## 创建swapchain
+- 查询硬件对swapchain的支持
+  - **SurfaceCapabilitiesKHR**，选择**Extent2D**
+    - min_image_count: u32,
+    - max_image_count: u32,
+    - current_extent: Extent2D,
+    - min_image_extent: Extent2D,
+    - max_image_extent: Extent2D,
+    - max_image_array_layers: u32,
+    - supported_transforms: SurfaceTransformFlagsKHR,
+    - current_transform: SurfaceTransformFlagsKHR,
+    - supported_composite_alpha: CompositeAlphaFlagsKHR,
+    - supported_usage_flags: ImageUsageFlags
+  - **SurfaceFormatKHR**
+    - format: Format,
+    - color_space: ColorSpaceKHR,
+  - **PresentModeKHR**，
+    - IMMEDIATE: Self = Self(0);
+    - MAILBOX: Self = Self(1);
+    - FIFO: Self = Self(2);
+    - FIFO_RELAXED: Self = Self(3);
+  - 创建ash::vk::SwapchainCreateInfoKHR
+  - 创建**swapchain**，先swapchain_loader = ash::khr::swapchain::Device::new(&instance, &device)，创建swapchainload，然后创建ash::vk::SwapchainKHR
+## 创建Image和Image View
+- 获取swapchain images
+- 为每个image创建一个image view
