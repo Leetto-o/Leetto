@@ -5,9 +5,11 @@ data: 2025-07-05 00:00:00 +0800
 categories: [Game]
 ---
 # Vulkan（Rust glfw0.59 + ash库0.38）
+
 ## 创建窗口
 - 创建**glfw实例**，glfw::init
 - 创建**window**，glfw_instance.create_window
+
 ## 创建Instance
 - 加载Vulkan函数，ash使用**ash::Entry**作为函数的进入点
 - 创建**Instance**
@@ -17,11 +19,14 @@ categories: [Game]
   - 创建**ash::vk::DebugUtilsMessengerCreateInfoEXT**
   - 根据Validation layer、ApplicationInfo、extensions、DebugUtilsMessengerCreateInfoEXT创建**ash::vk::InstanceCreateInfo**
   - Entry创建**Instance**，entry.create_instance
+
 ## 配置Debug Messenger
 - 创建**ash::vk::DebugUtilsMessengerCreateInfoEXT**
 - 创建**ash::ext::debug_utils::Instance**
 - 创建**debug_utils_messenger**，debug_utils.create_debug_utils_messenger
+
 ## 创建Surface
+
 ## 选择物理设备
 - instance获取所有的**physical device**，instance.enumerate_physical_devices().unwrap()
 - 检查physical device是不是满足需要的条件
@@ -207,17 +212,18 @@ categories: [Game]
     - 先选择**grapyics queue family**，通过instance.get_physical_device_queue_family_properties(physical_device)，获取QueueFamilyProperties，QueueFamilyProperties包括
       - queue_flags: QueueFlags
         - #[doc = "Queue supports graphics operations"]  
-          - const GRAPHICS
+          - GRAPHICS
         - #[doc = "Queue supports compute operations"]  
-          - const COMPUTE: Self = Self(0b10);
+          - COMPUTE: Self = Self(0b10);
         - #[doc = "Queue supports transfer operations"]  
-          - const TRANSFER
+          - TRANSFER
         - #[doc = "Queue supports sparse resource memory management operations"]  
-          - const SPARSE_BINDING
+          - SPARSE_BINDING
       - queue_count: u32,
       - timestamp_valid_bits: u32,
       -min_image_transfer_granularity: Extent3D
     - 在选在**present queue family**，通过ash::khr::surface::Instance::get_physical_device_surface_support获取是否有present queue
+
 ## 创建逻辑设备
 - 根据创建的物理设备，获取所需要的**graphics queue family**和**present queue family**的index
 - 创建ash::vk::DeviceQueueCreateInfo（Vec）
@@ -225,6 +231,7 @@ categories: [Game]
 - 创建逻辑设备**扩展**，包括ash::khr::swapchain
 - 创建ash::vk::DeviceCreateInfo
 - 创建**逻辑设备**，instance.create_device
+
 ## 创建swapchain
 - 查询硬件对swapchain的支持
   - **SurfaceCapabilitiesKHR**，选择**Extent2D**
@@ -248,6 +255,590 @@ categories: [Game]
     - FIFO_RELAXED: Self = Self(3);
   - 创建ash::vk::SwapchainCreateInfoKHR
   - 创建**swapchain**，先swapchain_loader = ash::khr::swapchain::Device::new(&instance, &device)，创建swapchainload，然后创建ash::vk::SwapchainKHR
+
 ## 创建Image和Image View
-- 获取swapchain images
-- 为每个image创建一个image view
+- 获取**swapchain images**，swapchain_loader.get_swapchain_images
+- 为每个image创建一个**image view**
+  - 创建**ash::vk::ComponentMapping**
+  - 创建**ash::vk::ImageSubresourceRange**
+  - 创建**ash::vk::ImageViewCreateInfo**
+  - 创建**ImageView**
+
+## 创建Render Pass
+- 创建**ash::vk::AttachmentDescription**
+  - format
+  - samples
+    - TYPE_1: Self = Self(0b1);
+    - TYPE_2: Self = Self(0b10);
+    - TYPE_4: Self = Self(0b100);
+    - TYPE_8: Self = Self(0b1000);
+    - TYPE_16: Self = Self(0b1_0000);
+    - TYPE_32: Self = Self(0b10_0000);
+    - TYPE_64: Self = Self(0b100_0000);
+  - load_op，决定在渲染之前如何处理附件中的数据
+    - LOAD: Self = Self(0);
+    - CLEAR: Self = Self(1);
+    - DONT_CARE: Self = Self(2);
+  - store_op，决定渲染之后如何处理附件中的数据
+    - STORE: Self = Self(0);
+    - DONT_CARE: Self = Self(1);
+  - stencil_load_op,应用于stencil模板
+  - stencil_store_op，应用于stencil模板
+  - initial_layout和final_layout
+    - UNDEFINED: Self = Self(0);
+    - GENERAL: Self = Self(1);
+    - COLOR_ATTACHMENT_OPTIMAL: Self = Self(2);
+    - DEPTH_STENCIL_ATTACHMENT_OPTIMAL: Self = Self(3);
+    - DEPTH_STENCIL_READ_ONLY_OPTIMAL: Self = Self(4);
+    - SHADER_READ_ONLY_OPTIMAL: Self = Self(5);
+    - TRANSFER_SRC_OPTIMAL: Self = Self(6);
+    - TRANSFER_DST_OPTIMAL: Self = Self(7);
+    - PREINITIALIZED: Self = Self(8);
+- 创建**附件引用**，ash::vk::AttachmentReference
+  - attachment，通过附件描述数组中的索引指定要引用的附件
+  - layout，指定附件在使用此引用的子过程期间具有的布局
+- 创建**子过程描述**，ash::vk::SubpassDescription
+  - pipeline_bind_point
+    - GRAPHICS: Self = Self(0);
+    - COMPUTE: Self = Self(1);
+  - color_attachments，对颜色附件的引用
+  - input_attachments，从着色器读取的附件
+  - resolve_attachments，用于多重采样颜色附件的附件
+  - preserve_attachments，此子过程未使用但必须保留数据的附件
+  - depth_stencil_attachment，用于深度和模板数据的附件
+- 创建**ash::vk::RenderPassCreateInfo**
+  - attachments
+  - subpasses
+- 创建**子过程**，调用device的create_render_pass方法
+
+## 创建渲染管线
+- 使用**glslc**将shader编译成**SPIR-V**二进制格式
+- 加载shader二进制文件
+- 创建**ash::vk::ShaderModuleCreateInfo**，然后device调用create_shader_module创建module
+- 创建vertex shader和fragment shader的**ash::vk::PipelineShaderStageCreateInfo**
+- 创建**ash::vk::PipelineDynamicStateCreateInfo**
+  - VIEWPORT: Self = Self(0);
+  - SCISSOR: Self = Self(1);
+  - LINE_WIDTH: Self = Self(2);
+  - DEPTH_BIAS: Self = Self(3);
+  - BLEND_CONSTANTS: Self = Self(4);
+  - DEPTH_BOUNDS: Self = Self(5);
+  - STENCIL_COMPARE_MASK: Self = Self(6);
+  - STENCIL_WRITE_MASK: Self = Self(7);
+  - STENCIL_REFERENCE: Self = Self(8);
+- 创建**ash::vk::PipelineVertexInputStateCreateInfo**，包括ash::vk::VertexInputAttributeDescription和ash::vk::VertexInputBindingDescription
+- 创建**ash::vk::PipelineInputAssemblyStateCreateInfo**
+  - primitive_restart_enable为true时表示复用顶点优化
+  - ash::vk::PrimitiveTopology
+    - POINT_LIST: Self = Self(0);
+    - LINE_LIST: Self = Self(1);
+    - LINE_STRIP: Self = Self(2);
+    - TRIANGLE_LIST: Self = Self(3);
+    - TRIANGLE_STRIP: Self = Self(4);
+    - TRIANGLE_FAN: Self = Self(5);
+    - LINE_LIST_WITH_ADJACENCY: Self = Self(6);
+    - LINE_STRIP_WITH_ADJACENCY: Self = Self(7);
+    - TRIANGLE_LIST_WITH_ADJACENCY: Self = Self(8);
+    - TRIANGLE_STRIP_WITH_ADJACENCY: Self = Self(9);
+    - PATCH_LIST: Self = Self(10);
+- 创建**ash::vk::PipelineViewportStateCreateInfo**
+  - ash::vk::Viewport
+  - ash::vk::Rect2D
+- 创建**ash::vk::PipelineRasterizationStateCreateInfo**
+  - depth_clamp_enable为true时，超出近平面或远平面的深度会保持在近平面和远平面，为false时会直接抛弃
+  - rasterizer_discard_enable为true时，则图元不会进入光栅化阶段
+  - polygon_mode
+    - FILL: Self = Self(0);
+    - LINE: Self = Self(1);
+    - POINT: Self = Self(2);
+  - line_width，超出1.0时需要启用GPU的wideLines功能
+  - cull_mode
+    - NONE: Self = Self(0);
+    - FRONT: Self = Self(0b1);
+    - BACK: Self = Self(0b10);
+    - FRONT_AND_BACK: Self = Self(0x0000_0003);
+  - front_face
+    - COUNTER_CLOCKWISE: Self = Self(0);
+    - CLOCKWISE: Self = Self(1);
+  - depth_bias_enable为true时，可以通过添加常量值或根据片段的斜率来偏移深度值
+    - depth_bias_constant_factor
+    - depth_bias_clamp
+    - depth_bias_slope_factor
+- 创建**ash::vk::PipelineMultisampleStateCreateInfo**
+  - sample_shading_enable
+    - TYPE_1: Self = Self(0b1);
+    - TYPE_2: Self = Self(0b10);
+    - TYPE_4: Self = Self(0b100);
+    - TYPE_8: Self = Self(0b1000);
+    - TYPE_16: Self = Self(0b1_0000);
+    - TYPE_32: Self = Self(0b10_0000);
+    - TYPE_64: Self = Self(0b100_0000);
+  - rasterization_samples
+  - min_sample_shading
+  - alpha_to_coverage_enable
+  - alpha_to_one_enable
+- 创建**ash::vk::PipelineDepthStencilStateCreateInfo**
+  - depth_test_enable
+  - depth_write_enable
+  - depth_compare_op
+    - NEVER: Self = Self(0);
+    - LESS: Self = Self(1);
+    - EQUAL: Self = Self(2);
+    - LESS_OR_EQUAL: Self = Self(3);
+    - GREATER: Self = Self(4);
+    - NOT_EQUAL: Self = Self(5);
+    - GREATER_OR_EQUAL: Self = Self(6);
+    - ALWAYS: Self = Self(7);
+  - depth_bounds_test_enable
+  - min_depth_bounds
+  - max_depth_bounds
+  - stencil_test_enable
+- 创建**ash::vk::PipelineColorBlendAttachmentState**
+  - color_write_mask
+    - ash::vk::ColorComponentFlags::R
+    - ash::vk::ColorComponentFlags::G
+    - ash::vk::ColorComponentFlags::B
+    - ash::vk::ColorComponentFlags::A
+    - ash::vk::ColorComponentFlags::RGBA
+  - blend_enable
+  - src_color_blend_factor
+  - dst_color_blend_factor
+  - src_alpha_blend_factor
+  - dst_alpha_blend_factor
+    - ZERO: Self = Self(0);
+    - ONE: Self = Self(1);
+    - SRC_COLOR: Self = Self(2);
+    - ONE_MINUS_SRC_COLOR: Self = Self(3);
+    - DST_COLOR: Self = Self(4);
+    - ONE_MINUS_DST_COLOR: Self = Self(5);
+    - SRC_ALPHA: Self = Self(6);
+    - ONE_MINUS_SRC_ALPHA: Self = Self(7);
+    - DST_ALPHA: Self = Self(8);
+    - ONE_MINUS_DST_ALPHA: Self = Self(9);
+    -ANT_COLOR: Self = Self(10);
+    - ONE_MINUS_CONSTANT_COLOR: Self = Self(11);
+    -ANT_ALPHA: Self = Self(12);
+    - ONE_MINUS_CONSTANT_ALPHA: Self = Self(13);
+    - SRC_ALPHA_SATURATE: Self = Self(14);
+    - SRC1_COLOR: Self = Self(15);
+    - ONE_MINUS_SRC1_COLOR: Self = Self(16);
+    - SRC1_ALPHA: Self = Self(17);
+    - ONE_MINUS_SRC1_ALPHA: Self = Self(18);
+  - color_blend_op和alpha_blend_op
+    - ADD: Self = Self(0);
+    - SUBTRACT: Self = Self(1);
+    - REVERSE_SUBTRACT: Self = Self(2);
+    - MIN: Self = Self(3);
+    - MAX: Self = Self(4);
+- 创建**ash::vk::PipelineColorBlendStateCreateInfo**
+  - logic_op_enable
+  - logic_op
+    - CLEAR: Self = Self(0);
+    - AND: Self = Self(1);
+    - AND_REVERSE: Self = Self(2);
+    - COPY: Self = Self(3);
+    - AND_INVERTED: Self = Self(4);
+    - NO_OP: Self = Self(5);
+    - XOR: Self = Self(6);
+    - OR: Self = Self(7);
+    - NOR: Self = Self(8);
+    - EQUIVALENT: Self = Self(9);
+    - INVERT: Self = Self(10);
+    - OR_REVERSE: Self = Self(11);
+    - COPY_INVERTED: Self = Self(12);
+    - OR_INVERTED: Self = Self(13);
+    - NAND: Self = Self(14);
+    - SET: Self = Self(15);
+  - attachments，ash::vk::PipelineColorBlendAttachmentState的数组
+  - blend_constants
+- 创建**ash::vk::PipelineLayoutCreateInfo**，并创建**PipelineLayout**
+- 创建**ash::vk::GraphicsPipelineCreateInfo**，利用前面创建的info
+  - stages
+  - vertex_input_state
+  - tessellation_state
+  - input_assembly_state
+  - viewport_state
+  - rasterization_state
+  - multisample_state
+  - depth_stencil_state
+  - color_blend_state
+  - dynamic_state
+  - layout
+  - render_pass
+  - subpass
+  - base_pipeline_handle
+  - base_pipeline_index
+
+## 创建Framebuffer
+- 为每个image view创建一个framebuffer，需要指定帧缓冲需要与哪个 renderPass兼容
+  - render_pass
+  - attachments
+  - width
+  - height
+  - layers
+
+## 创建命令缓冲
+- 创建**ash::vk::CommandPoolCreateInfo**，并调用device的create_command_pool创建**命令池**
+  - flags
+    - TRANSIENT: Self = Self(0b1)，提示命令缓冲区经常被新的命令重新记录
+    - RESET_COMMAND_BUFFER: Self = Self(0b10)，允许单独重新记录命令缓冲区，如果没有此标志，则必须一起重置所有命令缓冲区
+  - queue_family_index
+- 创建**ash::vk::CommandBufferAllocateInfo**
+  - command_pool
+  - level
+    - PRIMARY: Self = Self(0)，可以提交到队列以执行，但不能从其他命令缓冲区调用
+    - SECONDARY: Self = Self(1)，不能直接提交，但可以从主命令缓冲区调用
+  - command_buffer_count
+- device调用allocate_command_buffers创建command buffer
+
+## 记录command
+- 创建**ash::vk::CommandBufferBeginInfo**
+  - flags
+    - ONE_TIME_SUBMIT: Self = Self(0b1)，命令缓冲区将在执行一次后立即重新记录
+    - RENDER_PASS_CONTINUE: Self = Self(0b10)，这是一个辅助命令缓冲区，它将完全位于一个渲染通道内
+    - SIMULTANEOUS_USE: Self = Self(0b100)，命令缓冲区在已处于挂起执行状态时可以重新提交
+- device调用begin_command_buffer方法
+- 创建**ash::vk::RenderPassBeginInfo**
+  - render_pass
+  - framebuffer
+  - render_area
+  - clear_values
+- device调用cmd_begin_render_pass方法，参数包括
+  - commmand buffer
+  - ash::vk::RenderPassBeginInfo
+  - SubPassContents
+    - INLINE: Self = Self(0)，渲染通道命令将嵌入到主命令缓冲区本身中，并且不会执行辅助命令缓冲区
+    - SECONDARY_COMMAND_BUFFERS: Self = Self(1)，渲染通道命令将从辅助命令缓冲区执行
+- 开始记录cmd
+- 然后cmd_end_render_pass，最后end_command_buffer，至此command记录完毕
+
+## 绘制命令
+- device调用**cmd_bind_pipeline**绑定渲染管线
+- device分别调用**cmd_set_viewport和cmd_set_scissor**进行设置
+- device调用**cmd_draw**进行绘制，cmd_draw的几个参数
+  - vertexCount：即使我们没有顶点缓冲区，我们技术上仍然有 3 个顶点要绘制
+  - instanceCount：用于实例化渲染，如果不这样做，则使用 1
+  - firstVertex：用作顶点缓冲区的偏移量，定义了 gl_VertexIndex 的最小值。
+  - firstInstance：用作实例化渲染的偏移量，定义了 gl_InstanceIndex 的最小值。
+
+## 顶点缓冲
+
+### VAO
+- 创建**ash::vk::VertexInputBindingDescription**
+  - binding与后面ash::vk::VertexInputAttributeDescription的binding一致
+  - stride
+  - input_rate
+    - VERTEX: Self = Self(0);
+    - INSTANCE: Self = Self(1);
+- 创建**ash::vk::VertexInputAttributeDescription**
+  - binding与上面ash::vk::VertexInputBindingDescription一致
+  - location，与shader中的一致
+  - format
+    - UNDEFINED: Self = Self(0);
+    - R4G4_UNORM_PACK8: Self = Self(1);
+    - R4G4B4A4_UNORM_PACK16: Self = Self(2);
+    - B4G4R4A4_UNORM_PACK16: Self = Self(3);
+    - R5G6B5_UNORM_PACK16: Self = Self(4);
+    - B5G6R5_UNORM_PACK16: Self = Self(5);
+    - R5G5B5A1_UNORM_PACK16: Self = Self(6);
+    - B5G5R5A1_UNORM_PACK16: Self = Self(7);
+    - A1R5G5B5_UNORM_PACK16: Self = Self(8);
+    - R8_UNORM: Self = Self(9);
+    - R8_SNORM: Self = Self(10);
+    - R8_USCALED: Self = Self(11);
+    - R8_SSCALED: Self = Self(12);
+    - R8_UINT: Self = Self(13);
+    - R8_SINT: Self = Self(14);
+    - R8_SRGB: Self = Self(15);
+    - R8G8_UNORM: Self = Self(16);
+    - R8G8_SNORM: Self = Self(17);
+    - R8G8_USCALED: Self = Self(18);
+    - R8G8_SSCALED: Self = Self(19);
+    - R8G8_UINT: Self = Self(20);
+    - R8G8_SINT: Self = Self(21);
+    - R8G8_SRGB: Self = Self(22);
+    - R8G8B8_UNORM: Self = Self(23);
+    - R8G8B8_SNORM: Self = Self(24);
+    - R8G8B8_USCALED: Self = Self(25);
+    - R8G8B8_SSCALED: Self = Self(26);
+    - R8G8B8_UINT: Self = Self(27);
+    - R8G8B8_SINT: Self = Self(28);
+    - R8G8B8_SRGB: Self = Self(29);
+    - B8G8R8_UNORM: Self = Self(30);
+    - B8G8R8_SNORM: Self = Self(31);
+    - B8G8R8_USCALED: Self = Self(32);
+    - B8G8R8_SSCALED: Self = Self(33);
+    - B8G8R8_UINT: Self = Self(34);
+    - B8G8R8_SINT: Self = Self(35);
+    - B8G8R8_SRGB: Self = Self(36);
+    - R8G8B8A8_UNORM: Self = Self(37);
+    - R8G8B8A8_SNORM: Self = Self(38);
+    - R8G8B8A8_USCALED: Self = Self(39);
+    - R8G8B8A8_SSCALED: Self = Self(40);
+    - R8G8B8A8_UINT: Self = Self(41);
+    - R8G8B8A8_SINT: Self = Self(42);
+    - R8G8B8A8_SRGB: Self = Self(43);
+    - B8G8R8A8_UNORM: Self = Self(44);
+    - B8G8R8A8_SNORM: Self = Self(45);
+    - B8G8R8A8_USCALED: Self = Self(46);
+    - B8G8R8A8_SSCALED: Self = Self(47);
+    - B8G8R8A8_UINT: Self = Self(48);
+    - B8G8R8A8_SINT: Self = Self(49);
+    - B8G8R8A8_SRGB: Self = Self(50);
+    - A8B8G8R8_UNORM_PACK32: Self = Self(51);
+    - A8B8G8R8_SNORM_PACK32: Self = Self(52);
+    - A8B8G8R8_USCALED_PACK32: Self = Self(53);
+    - A8B8G8R8_SSCALED_PACK32: Self = Self(54);
+    - A8B8G8R8_UINT_PACK32: Self = Self(55);
+    - A8B8G8R8_SINT_PACK32: Self = Self(56);
+    - A8B8G8R8_SRGB_PACK32: Self = Self(57);
+    - A2R10G10B10_UNORM_PACK32: Self = Self(58);
+    - A2R10G10B10_SNORM_PACK32: Self = Self(59);
+    - A2R10G10B10_USCALED_PACK32: Self = Self(60);
+    - A2R10G10B10_SSCALED_PACK32: Self = Self(61);
+    - A2R10G10B10_UINT_PACK32: Self = Self(62);
+    - A2R10G10B10_SINT_PACK32: Self = Self(63);
+    - A2B10G10R10_UNORM_PACK32: Self = Self(64);
+    - A2B10G10R10_SNORM_PACK32: Self = Self(65);
+    - A2B10G10R10_USCALED_PACK32: Self = Self(66);
+    - A2B10G10R10_SSCALED_PACK32: Self = Self(67);
+    - A2B10G10R10_UINT_PACK32: Self = Self(68);
+    - A2B10G10R10_SINT_PACK32: Self = Self(69);
+    - R16_UNORM: Self = Self(70);
+    - R16_SNORM: Self = Self(71);
+    - R16_USCALED: Self = Self(72);
+    - R16_SSCALED: Self = Self(73);
+    - R16_UINT: Self = Self(74);
+    - R16_SINT: Self = Self(75);
+    - R16_SFLOAT: Self = Self(76);
+    - R16G16_UNORM: Self = Self(77);
+    - R16G16_SNORM: Self = Self(78);
+    - R16G16_USCALED: Self = Self(79);
+    - R16G16_SSCALED: Self = Self(80);
+    - R16G16_UINT: Self = Self(81);
+    - R16G16_SINT: Self = Self(82);
+    - R16G16_SFLOAT: Self = Self(83);
+    - R16G16B16_UNORM: Self = Self(84);
+    - R16G16B16_SNORM: Self = Self(85);
+    - R16G16B16_USCALED: Self = Self(86);
+    - R16G16B16_SSCALED: Self = Self(87);
+    - R16G16B16_UINT: Self = Self(88);
+    - R16G16B16_SINT: Self = Self(89);
+    - R16G16B16_SFLOAT: Self = Self(90);
+    - R16G16B16A16_UNORM: Self = Self(91);
+    - R16G16B16A16_SNORM: Self = Self(92);
+    - R16G16B16A16_USCALED: Self = Self(93);
+    - R16G16B16A16_SSCALED: Self = Self(94);
+    - R16G16B16A16_UINT: Self = Self(95);
+    - R16G16B16A16_SINT: Self = Self(96);
+    - R16G16B16A16_SFLOAT: Self = Self(97);
+    - R32_UINT: Self = Self(98);
+    - R32_SINT: Self = Self(99);
+    - R32_SFLOAT: Self = Self(100);
+    - R32G32_UINT: Self = Self(101);
+    - R32G32_SINT: Self = Self(102);
+    - R32G32_SFLOAT: Self = Self(103);
+    - R32G32B32_UINT: Self = Self(104);
+    - R32G32B32_SINT: Self = Self(105);
+    - R32G32B32_SFLOAT: Self = Self(106);
+    - R32G32B32A32_UINT: Self = Self(107);
+    - R32G32B32A32_SINT: Self = Self(108);
+    - R32G32B32A32_SFLOAT: Self = Self(109);
+    - R64_UINT: Self = Self(110);
+    - R64_SINT: Self = Self(111);
+    - R64_SFLOAT: Self = Self(112);
+    - R64G64_UINT: Self = Self(113);
+    - R64G64_SINT: Self = Self(114);
+    - R64G64_SFLOAT: Self = Self(115);
+    - R64G64B64_UINT: Self = Self(116);
+    - R64G64B64_SINT: Self = Self(117);
+    - R64G64B64_SFLOAT: Self = Self(118);
+    - R64G64B64A64_UINT: Self = Self(119);
+    - R64G64B64A64_SINT: Self = Self(120);
+    - R64G64B64A64_SFLOAT: Self = Self(121);
+    - B10G11R11_UFLOAT_PACK32: Self = Self(122);
+    - E5B9G9R9_UFLOAT_PACK32: Self = Self(123);
+    - D16_UNORM: Self = Self(124);
+    - X8_D24_UNORM_PACK32: Self = Self(125);
+    - D32_SFLOAT: Self = Self(126);
+    - S8_UINT: Self = Self(127);
+    - D16_UNORM_S8_UINT: Self = Self(128);
+    - D24_UNORM_S8_UINT: Self = Self(129);
+    - D32_SFLOAT_S8_UINT: Self = Self(130);
+    - BC1_RGB_UNORM_BLOCK: Self = Self(131);
+    - BC1_RGB_SRGB_BLOCK: Self = Self(132);
+    - BC1_RGBA_UNORM_BLOCK: Self = Self(133);
+    - BC1_RGBA_SRGB_BLOCK: Self = Self(134);
+    - BC2_UNORM_BLOCK: Self = Self(135);
+    - BC2_SRGB_BLOCK: Self = Self(136);
+    - BC3_UNORM_BLOCK: Self = Self(137);
+    - BC3_SRGB_BLOCK: Self = Self(138);
+    - BC4_UNORM_BLOCK: Self = Self(139);
+    - BC4_SNORM_BLOCK: Self = Self(140);
+    - BC5_UNORM_BLOCK: Self = Self(141);
+    - BC5_SNORM_BLOCK: Self = Self(142);
+    - BC6H_UFLOAT_BLOCK: Self = Self(143);
+    - BC6H_SFLOAT_BLOCK: Self = Self(144);
+    - BC7_UNORM_BLOCK: Self = Self(145);
+    - BC7_SRGB_BLOCK: Self = Self(146);
+    - ETC2_R8G8B8_UNORM_BLOCK: Self = Self(147);
+    - ETC2_R8G8B8_SRGB_BLOCK: Self = Self(148);
+    - ETC2_R8G8B8A1_UNORM_BLOCK: Self = Self(149);
+    - ETC2_R8G8B8A1_SRGB_BLOCK: Self = Self(150);
+    - ETC2_R8G8B8A8_UNORM_BLOCK: Self = Self(151);
+    - ETC2_R8G8B8A8_SRGB_BLOCK: Self = Self(152);
+    - EAC_R11_UNORM_BLOCK: Self = Self(153);
+    - EAC_R11_SNORM_BLOCK: Self = Self(154);
+    - EAC_R11G11_UNORM_BLOCK: Self = Self(155);
+    - EAC_R11G11_SNORM_BLOCK: Self = Self(156);
+    - ASTC_4X4_UNORM_BLOCK: Self = Self(157);
+    - ASTC_4X4_SRGB_BLOCK: Self = Self(158);
+    - ASTC_5X4_UNORM_BLOCK: Self = Self(159);
+    - ASTC_5X4_SRGB_BLOCK: Self = Self(160);
+    - ASTC_5X5_UNORM_BLOCK: Self = Self(161);
+    - ASTC_5X5_SRGB_BLOCK: Self = Self(162);
+    - ASTC_6X5_UNORM_BLOCK: Self = Self(163);
+    - ASTC_6X5_SRGB_BLOCK: Self = Self(164);
+    - ASTC_6X6_UNORM_BLOCK: Self = Self(165);
+    - ASTC_6X6_SRGB_BLOCK: Self = Self(166);
+    - ASTC_8X5_UNORM_BLOCK: Self = Self(167);
+    - ASTC_8X5_SRGB_BLOCK: Self = Self(168);
+    - ASTC_8X6_UNORM_BLOCK: Self = Self(169);
+    - ASTC_8X6_SRGB_BLOCK: Self = Self(170);
+    - ASTC_8X8_UNORM_BLOCK: Self = Self(171);
+    - ASTC_8X8_SRGB_BLOCK: Self = Self(172);
+    - ASTC_10X5_UNORM_BLOCK: Self = Self(173);
+    - ASTC_10X5_SRGB_BLOCK: Self = Self(174);
+    - ASTC_10X6_UNORM_BLOCK: Self = Self(175);
+    - ASTC_10X6_SRGB_BLOCK: Self = Self(176);
+    - ASTC_10X8_UNORM_BLOCK: Self = Self(177);
+    - ASTC_10X8_SRGB_BLOCK: Self = Self(178);
+    - ASTC_10X10_UNORM_BLOCK: Self = Self(179);
+    - ASTC_10X10_SRGB_BLOCK: Self = Self(180);
+    - ASTC_12X10_UNORM_BLOCK: Self = Self(181);
+    - ASTC_12X10_SRGB_BLOCK: Self = Self(182);
+    - ASTC_12X12_UNORM_BLOCK: Self = Self(183);
+    - ASTC_12X12_SRGB_BLOCK: Self = Self(184);
+  - offset(0),
+- 在创建pipeline时需要创建ash::vk::PipelineVertexInputStateCreateInfo，将两个Description传入，以这种方式绑定VAO
+
+### VBO
+- 创建Buffer
+  - 创建**ash::vk::BufferCreateInfo**
+    - size，缓冲区大小
+    - usage，缓冲区用途
+      - TRANSFER_SRC: Self = Self(0b1);
+      - TRANSFER_DST: Self = Self(0b10);
+      - UNIFORM_TEXEL_BUFFER: Self = Self(0b100);
+      - STORAGE_TEXEL_BUFFER: Self = Self(0b1000);
+      - UNIFORM_BUFFER: Self = Self(0b1_0000);
+      - STORAGE_BUFFER: Self = Self(0b10_0000);
+      - INDEX_BUFFER: Self = Self(0b100_0000);
+      - VERTEX_BUFFER: Self = Self(0b1000_0000);
+      - INDIRECT_BUFFER: Self = Self(0b1_0000_0000);
+    - sharing_mode，共享模式
+      - DEVICE_LOCAL: Self = Self(0b1);
+      - HOST_VISIBLE: Self = Self(0b10);
+      - HOST_COHERENT: Self = Self(0b100);
+      - HOST_CACHED: Self = Self(0b1000);
+      - LAZILY_ALLOCATED: Self = Self(0b1_0000);
+  - 创建CPU上的buffer
+  - 创建**ash::vk::MemoryAllocateInfo**
+    - allocation_size，为buffer分配大小，实际需要通过**get_buffer_memory_requirements**方法获取，获取到的大小可能比ash::vk::BufferCreateInfo中输入的要大
+    - memory_type_index
+  - 调用**allocate_memory**为buffer分配内存
+  - 调用**bind_buffer_memory**将memory与buffer绑定
+- 调用map_memory将buffer memory映射成内存指针
+- 将顶点数据copy进入映射的内存中
+  - 创建ash::vk::CommandBufferAllocateInfo
+  - 调用allocate_command_buffers分配command buffer
+  - 创建ash::vk::CommandBufferBeginInfo，并调用begin_command_buffer开始记录命令
+  - 创建sh::vk::BufferCopy，并调用cmd_copy_buffer将顶点数据copy到buffer中
+  - end_command_buffer结束command buffer
+  - 创建submit info，并调用queue_submit提交命令
+- 调用unmap_memory结束映射，此时buffer中有顶点数据
+- 创建GPU上的buffer
+- 将CPU上的buffer copy进GPU的buffer上
+- CPU上的buffer就可以释放了
+- 在cmd_draw之前调用cmd_bind_vertex_buffers绑定VBO
+
+### EBO
+- 类似VBO
+- 调用cmd_bind_index_buffer绑定EBO
+- 同时需要调用cmd_draw_indexed使用EBO进行绘制
+
+## 统一缓冲区
+- 创建**descriptor set layout**
+  - 创建**ash::vk::DescriptorSetLayoutBinding**
+    - binding
+    - descriptor_type
+      - SAMPLER: Self = Self(0);
+      - COMBINED_IMAGE_SAMPLER: Self = Self(1);
+      - SAMPLED_IMAGE: Self = Self(2);
+      - STORAGE_IMAGE: Self = Self(3);
+      - UNIFORM_TEXEL_BUFFER: Self = Self(4);
+      - STORAGE_TEXEL_BUFFER: Self = Self(5);
+      - UNIFORM_BUFFER: Self = Self(6);
+      - STORAGE_BUFFER: Self = Self(7);
+      - UNIFORM_BUFFER_DYNAMIC: Self = Self(8);
+      - STORAGE_BUFFER_DYNAMIC: Self = Self(9);
+      - INPUT_ATTACHMENT: Self = Self(10);
+    - descriptor_count
+    - stage_flags
+      - VERTEX: Self = Self(0b1);
+      - TESSELLATION_CONTROL: Self = Self(0b10);
+      - TESSELLATION_EVALUATION: Self = Self(0b100);
+      - GEOMETRY: Self = Self(0b1000);
+      - FRAGMENT: Self = Self(0b1_0000);
+      - COMPUTE: Self = Self(0b10_0000);
+      - ALL_GRAPHICS: Self = Self(0x0000_001F);
+      - ALL: Self = Self(0x7FFF_FFFF);
+  - 创建**ash::vk::DescriptorSetLayoutCreateInfo**，需要绑定ash::vk::DescriptorSetLayoutBinding
+  - 调用create_descriptor_set_layout创建descriptor set layout
+- 创建**uniform buffer**，将buffer memory映射成内存指针
+- 每一帧在提交command之前更新uniform，计算MVP矩阵，将数据copy到内存指针中
+- 创建**描述符池**（**Descriptor Pool**）
+  - 创建**ash::vk::DescriptorPoolSize**
+    - ty
+      - SAMPLER: Self = Self(0);
+      - COMBINED_IMAGE_SAMPLER: Self = Self(1);
+      - SAMPLED_IMAGE: Self = Self(2);
+      - STORAGE_IMAGE: Self = Self(3);
+      - UNIFORM_TEXEL_BUFFER: Self = Self(4);
+      - STORAGE_TEXEL_BUFFER: Self = Self(5);
+      - UNIFORM_BUFFER: Self = Self(6);
+      - STORAGE_BUFFER: Self = Self(7);
+      - UNIFORM_BUFFER_DYNAMIC: Self = Self(8);
+      - STORAGE_BUFFER_DYNAMIC: Self = Self(9);
+      - INPUT_ATTACHMENT: Self = Self(10);
+    - descriptor_count
+  - 创建**ash::vk::DescriptorPoolCreateInfo**
+  - 调用create_descriptor_pool创建描述符池
+- 创建**描述符集**（**Descriptor Set**）
+  - 创建**ash::vk::DescriptorSetAllocateInfo**
+    - descriptor_pool
+    - set_layouts
+  - 调用allocate_descriptor_sets分配描述符集
+  - 创建**ash::vk::DescriptorBufferInfo**
+    - buffer
+    - offset(0)
+    - range，UBO的大小
+  - 创建**ash::vk::WriteDescriptorSet**
+    - dst_set，描述符集
+    - dst_binding
+    - dst_array_element，set数组的索引
+    - descriptor_type
+      - SAMPLER: Self = Self(0);
+      - COMBINED_IMAGE_SAMPLER: Self = Self(1);
+      - SAMPLED_IMAGE: Self = Self(2);
+      - STORAGE_IMAGE: Self = Self(3);
+      - UNIFORM_TEXEL_BUFFER: Self = Self(4);
+      - STORAGE_TEXEL_BUFFER: Self = Self(5);
+      - UNIFORM_BUFFER: Self = Self(6);
+      - STORAGE_BUFFER: Self = Self(7);
+      - UNIFORM_BUFFER_DYNAMIC: Self = Self(8);
+      - STORAGE_BUFFER_DYNAMIC: Self = Self(9);
+      - INPUT_ATTACHMENT: Self = Self(10);
+    - buffer_info
+  - 调用update_descriptor_sets更新描述符集
+- 在cmd_draw之前调用cmd_bind_descriptor_sets绑定描述符集
